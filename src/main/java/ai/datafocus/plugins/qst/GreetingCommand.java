@@ -2,7 +2,6 @@ package ai.datafocus.plugins.qst;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
@@ -25,6 +24,11 @@ public class GreetingCommand implements Runnable {
     @Override
     public void run() {
         greetingService.sayHello(name, rabbitUrl);
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
