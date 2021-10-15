@@ -12,6 +12,8 @@ dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-picocli'
     implementation 'io.quarkus:quarkus-arc'
+    // https://mvnrepository.com/artifact/com.rabbitmq/amqp-client
+    implementation 'com.rabbitmq:amqp-client:5.13.1'
     testImplementation 'io.quarkus:quarkus-junit5'
 }
 
