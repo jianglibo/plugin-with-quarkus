@@ -3,12 +3,13 @@ package ai.datafocus.plugins.qst.rest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import ai.datafocus.plugins.qst.MyConfig.JstPartnerData;
+import ai.datafocus.plugins.qst.dto.DcsPluginInstance.InstanceVars;
+
 
 // @Builder(buildMethodName = "builderInternal")
 public class JuShuiTanParamsSigner {
 
-  public static String sign(JstPartnerData jstPartnerData, String method, long ts) {
+  public static String sign(InstanceVars jstPartnerData, String method, long ts) {
     String beforeMd5 =
         method
             + jstPartnerData.getPartnerid()

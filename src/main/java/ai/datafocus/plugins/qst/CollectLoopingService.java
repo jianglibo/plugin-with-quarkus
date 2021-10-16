@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.jboss.logging.Logger;
 
-import ai.datafocus.plugins.qst.MyConfig.JstPartnerData;
+import ai.datafocus.plugins.qst.dto.DcsPluginInstance.InstanceVars;
 import ai.datafocus.plugins.qst.rest.JuShuiTanResource;
 import ai.datafocus.plugins.qst.rest.TimeStep;
 import ai.datafocus.plugins.qst.resultdatatype.Order;
@@ -27,7 +27,7 @@ public class CollectLoopingService {
   @Inject JuShuiTanResource jushuitanResource;
 
   public void startLooping() throws JsonProcessingException {
-    JstPartnerData jstPartnerData = myconfig.getInstanceConfig();
+    InstanceVars jstPartnerData = myconfig.getDcsPluginInstance().getInstanceVars();
     TimeStep timeStep =
         TimeStep.initCreate(
             jstPartnerData.getModified_begin(),
@@ -37,14 +37,14 @@ public class CollectLoopingService {
     boolean loop_time_limited = jstPartnerData.getLoop_times() > 0;
     while (timeStep != null) {
       OrderQueryResult result = jushuitanResource.getOrders(timeStep.toOrderQueryBody());
-      for(Order order: result.getOrders()) {
-	      try {
-		rabbitmqService.publish(order);
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
+      for (Order order : result.getOrders()) {
+        try {
+          rabbitmqService.publish(order);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
-//       Log.info(result);
+      // Log.info(result);
       timeStep = timeStep.nextPage(result.getOrders().size());
       if (loop_time_limited) {
         loop_times += 1;

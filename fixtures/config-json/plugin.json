@@ -1,0 +1,9 @@
+{
+	"table_description": "{}",
+	"secret": "08876f24-464a-4897-b58c-6b500343dae1",
+	"queue_config": "{\"uri\": \"amqps://aa:bb@cc.cc.cc\", \"exchange_name\":\"exchange_name\", \"queue_name\": \"queue_name\", \"routing_key\": \"routing_key\"}",
+	"name": "for-curl-access",
+	"id": 3,
+	"author_id": 9,
+	"vars": "{\"api_end_point\": \"https://open.erp321.com\"}"
+}

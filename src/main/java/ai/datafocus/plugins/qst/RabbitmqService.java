@@ -38,7 +38,7 @@ public class RabbitmqService {
       throws KeyManagementException, NoSuchAlgorithmException, URISyntaxException, IOException,
           TimeoutException {
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setUri(myconfig.getQueueConfig().getUri());
+    factory.setUri(myconfig.getDcsPlugin().getQueueConfig().getUri());
     this.conn = factory.newConnection();
     this.channel = conn.createChannel();
     Log.debug(channel);
@@ -67,8 +67,8 @@ public class RabbitmqService {
     headers.put("longitude", -0.0905493);
     byte[] messageBodyBytes = mapper.writeValueAsString(order).getBytes();
     channel.basicPublish(
-        myconfig.getQueueConfig().getExchange_name(),
-        myconfig.getQueueConfig().getRouting_key(),
+        myconfig.getDcsPlugin().getQueueConfig().getExchange_name(),
+        myconfig.getDcsPlugin().getQueueConfig().getRouting_key(),
         new AMQP.BasicProperties.Builder()
             .headers(headers)
             .contentType(MediaType.APPLICATION_JSON)
