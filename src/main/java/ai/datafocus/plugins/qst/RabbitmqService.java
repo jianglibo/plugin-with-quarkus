@@ -1,15 +1,11 @@
 package ai.datafocus.plugins.qst;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PreDestroy;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
@@ -18,11 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 
 import ai.datafocus.plugins.qst.resultdatatype.Order;
-import io.quarkus.logging.Log;
-import io.quarkus.runtime.StartupEvent;
 
 @Singleton
 public class RabbitmqService {
@@ -34,18 +27,18 @@ public class RabbitmqService {
   private Connection conn;
   private Channel channel;
 
-  void startup(@Observes StartupEvent event)
-      throws KeyManagementException, NoSuchAlgorithmException, URISyntaxException, IOException,
-          TimeoutException {
-    ConnectionFactory factory = new ConnectionFactory();
-    factory.setUri(myconfig.getDcsPlugin().getQueueConfig().getUri());
-    this.conn = factory.newConnection();
-    this.channel = conn.createChannel();
-    Log.debug(channel);
-    // channel.exchangeDeclare(exchangeName, "direct", true);
-    // channel.queueDeclare(queueName, true, false, false, null);
-    // channel.queueBind(queueName, exchangeName, routingKey);
-  }
+  // void startup(@Observes StartupEvent event)
+  //     throws KeyManagementException, NoSuchAlgorithmException, URISyntaxException, IOException,
+  //         TimeoutException {
+  //   ConnectionFactory factory = new ConnectionFactory();
+  //   factory.setUri(myconfig.getDcsPlugin().getQueueConfig().getUri());
+  //   this.conn = factory.newConnection();
+  //   this.channel = conn.createChannel();
+  //   Log.debug(channel);
+  //   // channel.exchangeDeclare(exchangeName, "direct", true);
+  //   // channel.queueDeclare(queueName, true, false, false, null);
+  //   // channel.queueBind(queueName, exchangeName, routingKey);
+  // }
 
   @PreDestroy
   void preDestroy() {

@@ -1,5 +1,7 @@
 package ai.datafocus.plugins.qst.dto;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +15,7 @@ public class DcsPluginInstance {
   private String user_id;
   private Integer dcs_plugin_id;
   private String vars;
+  private Map<String, Object> varsMap;
   private String state;
   private String created_at;
   private String updated_at;
@@ -34,5 +37,6 @@ public class DcsPluginInstance {
     private int page_size;
     private int step_days;
     private int loop_times;
+    private DcsPlugin plugin;
   }
 }

@@ -7,12 +7,17 @@ import java.time.format.DateTimeParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkus.logging.Log;
+import io.quarkus.runtime.annotations.IgnoreProperty;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 public class TimeStep {
   private static final DateTimeFormatter DT_PATTERN =
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -99,6 +104,7 @@ public class TimeStep {
         .build();
   }
 
+  @IgnoreProperty
   public String getModified_end() {
     return LocalDateTime.parse(modified_begin, DT_PATTERN).plusDays(step_days).format(DT_PATTERN);
   }
