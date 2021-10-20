@@ -49,7 +49,19 @@ public class MyConfig {
     private String routing_key;
   }
 
-  /** 主要是解析toplugin参数 */
+  /**
+   * 主要是解析toplugin参数
+   * <pre>
+   * {
+   *   "separator": "08877f24-464a-4867-b58c-6b500349dae1",
+   *   "plugin_instance": {...},
+   *   "state": {...}
+   * }
+   * </pre>
+   * 
+   * @throws JsonMappingException
+   * @throws JsonProcessingException
+   */
   @PostConstruct
   void postContruct() throws JsonMappingException, JsonProcessingException {
     // test toPluginStr. 可能是加密的字串，需要解密

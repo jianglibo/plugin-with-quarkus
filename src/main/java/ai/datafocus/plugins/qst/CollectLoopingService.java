@@ -65,6 +65,13 @@ public class CollectLoopingService {
 
   /**
    * 如果返回的state是null，那么将不再issue新的Fire-and-forget的任务。
+   * 进程输出的数据在一个特定的分隔字串之间，数据格式是。
+   * <pre>
+   * {
+   *   "state": {...}
+   *   "data": [{}, {}]
+   * }
+   * </pre>
    * 
    * @throws JsonMappingException
    * @throws JsonProcessingException
