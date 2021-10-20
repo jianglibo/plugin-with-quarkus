@@ -86,11 +86,9 @@ public class MyConfig {
       this.dcsPluginInstance = mapper.readValue(serializedState, DcsPluginInstance.class);
     }
 
-    if (dcsPluginInstance.getVarsMap() != null) {
       dcsPluginInstance.setInstanceVars(
           mapper.readValue(
-              mapper.writeValueAsString(dcsPluginInstance.getVarsMap()), InstanceVars.class));
-    }
+              mapper.writeValueAsString(dcsPluginInstance.getVars()), InstanceVars.class));
 
     if (toPlugin.get("state") == null) {
       setInitTimeStep();

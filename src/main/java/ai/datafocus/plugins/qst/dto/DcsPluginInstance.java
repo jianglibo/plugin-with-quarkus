@@ -1,10 +1,7 @@
 package ai.datafocus.plugins.qst.dto;
 
-import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 
 import lombok.Data;
 
@@ -14,8 +11,7 @@ public class DcsPluginInstance {
   private Integer id;
   private String user_id;
   private Integer dcs_plugin_id;
-  private String vars;
-  private Map<String, Object> varsMap;
+  private Map<String, Object> vars;
   private String state;
   private String created_at;
   private String updated_at;
@@ -23,10 +19,6 @@ public class DcsPluginInstance {
 
   private InstanceVars instanceVars;
 
-  public void parseInstanceVars(ObjectMapper mapper)
-      throws JsonMappingException, JsonProcessingException {
-    this.instanceVars = mapper.readValue(vars, InstanceVars.class);
-  }
 
   @Data
   public static class InstanceVars {

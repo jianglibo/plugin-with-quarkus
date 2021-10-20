@@ -2,8 +2,7 @@
 	"state": {},
 	"separator": "08877f24-464a-4867-b58c-6b500349dae1",
 	"plugin_instance": {
-		"vars": "{\"j[ushuitan_id\": 1}",
-		"varsMap": {
+		"vars": {
 			"partnerid": "",
 			"partnerkey": "",
 			"token": "",
