@@ -14,8 +14,6 @@ public interface JuShuiTanService {
 
   @POST
   @Path("/query.aspx")
-//   @Produces(MediaType.APPLICATION_JSON) 
-//   OrderQueryResult queryOrder(
   String queryOrder(
       @QueryParam("method") String method,
       @QueryParam("partnerid") String partnerid,
