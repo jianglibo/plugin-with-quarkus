@@ -97,7 +97,7 @@ public class MyConfig {
       if (timeStep.getModified_begin() == null) {
         setInitTimeStep();
       }
-    } else { // from config file. it's easy to write json.
+    } else { // 通常情况下，控制器传过来的时候已经将state从字符串变成了json
       String serializedState = mapper.writeValueAsString(toPlugin.get("state"));
       timeStep = mapper.readValue(serializedState, TimeStep.class);
       if (timeStep.getModified_begin() == null) {

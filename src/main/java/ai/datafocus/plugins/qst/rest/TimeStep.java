@@ -27,7 +27,7 @@ public class TimeStep {
   private int page_size;
   private int step_days;
 
-  private int empty_result_count;
+  private int partial_result_count;
 
   /**
    * This factory method will be used before and after the first invoke. after receive from the
@@ -60,23 +60,22 @@ public class TimeStep {
   }
 
   private TimeStep nextTimeStep() {
-    if (empty_result_count > 0) {
-      return null;
-    }
     return TimeStep.builder()
         .modified_begin(getModified_end())
         .page_index(1)
         .page_size(page_size)
         .step_days(step_days)
-        .empty_result_count(empty_result_count + 1)
         .build();
   }
 
   /**
-   * After each invoke this method will be called. if last invoke return empty result then
-   * nextTimeStep will be contructed.
+   * 对于聚水潭的API来说，它是按照日期区间来限定查询。 假设每页50条记录。时间的区间是yyyy-mm-dd 24:00:00 + 7天
    *
-   * <p>if empty_result_count > 1 it means there is no more result.
+   * <p>如果当前返回的记录数小于50，说明这当前这个日期区间没有新的记录了（成立的条件是这个区间是过去的区间，如果还没到这个区间的上限，那么接下来还是可能会有新的记录加入）。
+   *
+   * <p>这个情况比较复杂需要仔细考虑！！！！！！！在新的设计方案下，返回null肯定是错误的。
+   * 
+   * <p> 必须结合时间来判断，除非知道区间已经成为过去，不然就可能会造成数据丢失，或者不会步进死循环！！！。
    *
    * @param last_item_number
    * @return TimeStep
@@ -90,7 +89,6 @@ public class TimeStep {
           .page_index(page_index + 1)
           .page_size(page_size)
           .step_days(step_days)
-          .empty_result_count(0)
           .build();
     }
   }

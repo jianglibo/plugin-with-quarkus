@@ -64,8 +64,13 @@ public class CollectLoopingService {
   }
 
   /**
-   * 如果返回的state是null，那么将不再issue新的Fire-and-forget的任务。
-   * 进程输出的数据在一个特定的分隔字串之间，数据格式是。
+   * 这里的state信息需要厘清一下。如果当前请求的页是第99页，大小是50，而实际返回的记录只有30条，说明目前没有后继的记录了。
+   * 
+   * 但是下次请求的时候，还必须是第99页，虽然有30条重复，但是仅仅按页方式处理是没有办法的，除非以offset和limit方式。
+   * 
+   * 结论：这个状态的管理要根据自己的情况调整策略。
+   * 
+   * 
    * <pre>
    * {
    *   "state": {...}
@@ -77,11 +82,14 @@ public class CollectLoopingService {
    * @throws JsonProcessingException
    */
   public void once() throws JsonMappingException, JsonProcessingException {
+    // 这个timestep是控制器通过环境变量传入的。
+    TimeStep timeStep = myconfig.getTimeStep();
     OrderQueryResult result =
-        jushuitanResource.getOrders(myconfig.getTimeStep().toOrderQueryBody());
+        jushuitanResource.getOrders(timeStep.toOrderQueryBody());
+    TimeStep nextTimeStep = timeStep.nextPage(result.getOrders().size());
     OutOfPlugin outOfPlugin =
         OutOfPlugin.builder()
-            .state(myconfig.getTimeStep().nextPage(result.getOrders().size()))
+            .state(nextTimeStep)
             .data(result.getOrders())
             .build();
     appUtil.printOutData(outOfPlugin);
