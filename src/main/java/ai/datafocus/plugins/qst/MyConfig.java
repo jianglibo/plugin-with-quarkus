@@ -1,7 +1,6 @@
 package ai.datafocus.plugins.qst;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -16,7 +15,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import ai.datafocus.plugins.qst.dto.DcsPlugin;
 import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
-import ai.datafocus.plugins.qst.dto.DcsPluginInstance.InstanceVars;
+import ai.datafocus.plugins.qst.dto.OutputType;
+import ai.datafocus.plugins.qst.dto.ToPlugin;
 import ai.datafocus.plugins.qst.rest.TimeStep;
 import ai.datafocus.plugins.qst.util.JasyptUtil;
 import lombok.Data;
@@ -36,8 +36,7 @@ public class MyConfig {
   @Getter private DcsPluginInstance dcsPluginInstance;
   @Getter private TimeStep timeStep;
 
-  @Getter
-  private String separator;
+  @Getter private String separator;
 
   @Inject ObjectMapper mapper;
 
@@ -51,14 +50,15 @@ public class MyConfig {
 
   /**
    * 主要是解析toplugin参数
+   *
    * <pre>
    * {
-   *   "output_to": {"type": "STDIO", "separator": "08877f24-464a-4867-b58c-6b500349dae1"},
+   *   "output_to": {"type": "STDIO", "settings": {"separator": "08877f24-464a-4867-b58c-6b500349dae1"}},
    *   "plugin_instance": {...},
    *   "state": {...}
    * }
    * </pre>
-   * 
+   *
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
@@ -69,39 +69,22 @@ public class MyConfig {
     if (!toPluginStr.trim().startsWith("{")) { // it's not a json string
       toPluginJsonStr = JasyptUtil.decrypt(toPluginStr);
     }
-    // 不直接变成ToPlugin？因为还有变数
-    Map<String, Object> toPlugin = mapper.readValue(toPluginJsonStr, typeRef);
+    ToPlugin toPlugin = mapper.readValue(toPluginJsonStr, ToPlugin.class);
 
-    Map<String, Object> output_to = toPlugin.get("output_to");
+    OutputType output_to = toPlugin.getOutput_to();
 
-    this.separator = (String) toPlugin.get("separator");
+    this.separator = (String) output_to.getSettings().get("separator");
 
     if (separator == null) {
       throw new RuntimeException("separator is a must. may use uuid.");
     }
 
-    if (toPlugin.get("plugin_instance") instanceof String) {
-      this.dcsPluginInstance =
-          mapper.readValue((String) toPlugin.get("plugin_instance"), DcsPluginInstance.class);
-    } else { // from config file. it's easy to write json.
-      String serializedState = mapper.writeValueAsString(toPlugin.get("plugin_instance"));
-      this.dcsPluginInstance = mapper.readValue(serializedState, DcsPluginInstance.class);
-    }
+    this.dcsPluginInstance = toPlugin.getPlugin_instance();
 
-      dcsPluginInstance.setInstanceVars(
-          mapper.readValue(
-              mapper.writeValueAsString(dcsPluginInstance.getVars()), InstanceVars.class));
-
-    if (toPlugin.get("state") == null) {
+    if (toPlugin.getState() == null) {
       setInitTimeStep();
-    } else if (toPlugin.get("state") instanceof String) {
-      timeStep = mapper.readValue((String) toPlugin.get("state"), TimeStep.class);
-      if (timeStep.getModified_begin() == null) {
-        setInitTimeStep();
-      }
     } else { // 通常情况下，控制器传过来的时候已经将state从字符串变成了json
-      String serializedState = mapper.writeValueAsString(toPlugin.get("state"));
-      timeStep = mapper.readValue(serializedState, TimeStep.class);
+      timeStep = toPlugin.getState();
       if (timeStep.getModified_begin() == null) {
         setInitTimeStep();
       }
@@ -111,8 +94,8 @@ public class MyConfig {
   private void setInitTimeStep() {
     this.timeStep =
         TimeStep.initCreate(
-            dcsPluginInstance.getInstanceVars().getModified_begin(),
-            dcsPluginInstance.getInstanceVars().getPage_size(),
-            dcsPluginInstance.getInstanceVars().getStep_days());
+            dcsPluginInstance.getVars().getModified_begin(),
+            dcsPluginInstance.getVars().getPage_size(),
+            dcsPluginInstance.getVars().getStep_days());
   }
 }

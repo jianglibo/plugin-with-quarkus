@@ -26,7 +26,7 @@ public class JuShuiTanResource {
 
   public OrderQueryResult getOrders(OrderQueryBody orderQueryBody)
       throws JsonMappingException, JsonProcessingException {
-    InstanceVars jstPartnerData = myconfig.getDcsPluginInstance().getInstanceVars();
+    InstanceVars jstPartnerData = myconfig.getDcsPluginInstance().getVars();
     long ts = System.currentTimeMillis() / 1000;
     String result =
         jushuitanService.queryOrder(

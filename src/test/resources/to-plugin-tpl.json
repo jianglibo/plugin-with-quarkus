@@ -1,6 +1,11 @@
 {
 	"state": {},
-	"separator": "08877f24-464a-4867-b58c-6b500349dae1",
+	"output_to": {
+		"type": "STDIO",
+		"settings": {
+			"separator": "08877f24-464a-4867-b58c-6b500349dae1"
+		}
+	},
 	"plugin_instance": {
 		"vars": {
 			"partnerid": "",

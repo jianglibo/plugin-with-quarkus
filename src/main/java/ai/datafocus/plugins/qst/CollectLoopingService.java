@@ -34,7 +34,7 @@ public class CollectLoopingService {
   @Inject JuShuiTanResource jushuitanResource;
 
   public void startLooping() throws JsonProcessingException {
-    InstanceVars instanceVars = myconfig.getDcsPluginInstance().getInstanceVars();
+    InstanceVars instanceVars = myconfig.getDcsPluginInstance().getVars();
     TimeStep timeStep =
         TimeStep.initCreate(
             instanceVars.getModified_begin(),
