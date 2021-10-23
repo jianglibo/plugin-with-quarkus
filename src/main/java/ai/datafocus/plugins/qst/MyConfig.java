@@ -53,7 +53,7 @@ public class MyConfig {
    * 主要是解析toplugin参数
    * <pre>
    * {
-   *   "separator": "08877f24-464a-4867-b58c-6b500349dae1",
+   *   "output_to": {"type": "STDIO", "separator": "08877f24-464a-4867-b58c-6b500349dae1"},
    *   "plugin_instance": {...},
    *   "state": {...}
    * }
@@ -71,6 +71,8 @@ public class MyConfig {
     }
     // 不直接变成ToPlugin？因为还有变数
     Map<String, Object> toPlugin = mapper.readValue(toPluginJsonStr, typeRef);
+
+    Map<String, Object> output_to = toPlugin.get("output_to");
 
     this.separator = (String) toPlugin.get("separator");
 
