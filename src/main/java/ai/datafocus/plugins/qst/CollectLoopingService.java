@@ -92,6 +92,6 @@ public class CollectLoopingService {
             .state(nextTimeStep)
             .data(result.getOrders())
             .build();
-    appUtil.printOutData(outOfPlugin);
+    appUtil.printOutDataJson(outOfPlugin);
   }
 }

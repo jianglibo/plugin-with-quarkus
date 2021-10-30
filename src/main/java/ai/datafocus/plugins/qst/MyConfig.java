@@ -2,7 +2,6 @@ package ai.datafocus.plugins.qst;
 
 import java.util.HashMap;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -15,6 +14,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import ai.datafocus.plugins.qst.dto.DcsPlugin;
 import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
+import ai.datafocus.plugins.qst.dto.MockState;
 import ai.datafocus.plugins.qst.dto.OutputType;
 import ai.datafocus.plugins.qst.dto.ToPlugin;
 import ai.datafocus.plugins.qst.rest.TimeStep;
@@ -35,6 +35,7 @@ public class MyConfig {
 
   @Getter private DcsPluginInstance dcsPluginInstance;
   @Getter private TimeStep timeStep;
+  @Getter private MockState mockState;
 
   @Getter private String separator;
 
@@ -62,8 +63,7 @@ public class MyConfig {
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
-  @PostConstruct
-  void postContruct() throws JsonMappingException, JsonProcessingException {
+  public MyConfig parese() throws JsonMappingException, JsonProcessingException {
     // test toPluginStr. 可能是加密的字串，需要解密
     String toPluginJsonStr = toPluginStr;
     if (!toPluginStr.trim().startsWith("{")) { // it's not a json string
@@ -89,6 +89,36 @@ public class MyConfig {
         setInitTimeStep();
       }
     }
+    return this;
+  }
+
+  public MyConfig pareseMock() throws JsonMappingException, JsonProcessingException {
+    // test toPluginStr. 可能是加密的字串，需要解密
+    String toPluginJsonStr = toPluginStr;
+    if (!toPluginStr.trim().startsWith("{")) { // it's not a json string
+      toPluginJsonStr = JasyptUtil.decrypt(toPluginStr);
+    }
+    ToPlugin toPlugin = mapper.readValue(toPluginJsonStr, ToPlugin.class);
+
+    OutputType output_to = toPlugin.getOutput_to();
+
+    this.separator = (String) output_to.getSettings().get("separator");
+
+    if (separator == null) {
+      throw new RuntimeException("separator is a must. may use uuid.");
+    }
+
+    this.dcsPluginInstance = toPlugin.getPlugin_instance();
+
+    if (toPlugin.getState() == null) {
+      setInitTimeStep();
+    } else { // 通常情况下，控制器传过来的时候已经将state从字符串变成了json
+      timeStep = toPlugin.getState();
+      if (timeStep.getModified_begin() == null) {
+        setInitTimeStep();
+      }
+    }
+    return this;
   }
 
   private void setInitTimeStep() {
