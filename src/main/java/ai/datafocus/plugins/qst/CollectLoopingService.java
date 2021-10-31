@@ -34,7 +34,7 @@ public class CollectLoopingService {
   @Inject JuShuiTanResource jushuitanResource;
 
   public void startLooping() throws JsonProcessingException {
-    InstanceVars instanceVars = myconfig.getDcsPluginInstance().getVars();
+    InstanceVars instanceVars = myconfig.parese().getDcsPluginInstance().getVars();
     TimeStep timeStep =
         TimeStep.initCreate(
             instanceVars.getModified_begin(),
@@ -65,33 +65,28 @@ public class CollectLoopingService {
 
   /**
    * 这里的state信息需要厘清一下。如果当前请求的页是第99页，大小是50，而实际返回的记录只有30条，说明目前没有后继的记录了。
-   * 
-   * 但是下次请求的时候，还必须是第99页，虽然有30条重复，但是仅仅按页方式处理是没有办法的，除非以offset和limit方式。
-   * 
-   * 结论：这个状态的管理要根据自己的情况调整策略。
-   * 
-   * 
+   *
+   * <p>但是下次请求的时候，还必须是第99页，虽然有30条重复，但是仅仅按页方式处理是没有办法的，除非以offset和limit方式。
+   *
+   * <p>结论：这个状态的管理要根据自己的情况调整策略。
+   *
    * <pre>
    * {
    *   "state": {...}
    *   "data": [{}, {}]
    * }
    * </pre>
-   * 
+   *
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
   public void once() throws JsonMappingException, JsonProcessingException {
     // 这个timestep是控制器通过环境变量传入的。
     TimeStep timeStep = myconfig.getTimeStep();
-    OrderQueryResult result =
-        jushuitanResource.getOrders(timeStep.toOrderQueryBody());
+    OrderQueryResult result = jushuitanResource.getOrders(timeStep.toOrderQueryBody());
     TimeStep nextTimeStep = timeStep.nextPage(result.getOrders().size());
     OutOfPlugin outOfPlugin =
-        OutOfPlugin.builder()
-            .state(nextTimeStep)
-            .data(result.getOrders())
-            .build();
+        OutOfPlugin.builder().state(nextTimeStep).data(result.getOrders()).build();
     appUtil.printOutDataJson(outOfPlugin);
   }
 }

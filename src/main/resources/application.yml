@@ -1,0 +1,23 @@
+IN_RESOURCE_APPLICATION_KEY: IN_RESOURCE_APPLICATION_VALUE
+# jushuitan-api/mp-rest/url=https://open.erp321.com
+jushuitan-api:
+  mp-rest:
+    url: https://c.jushuitan.com
+    scope: javax.inject.Singleton
+PLUGIN_INSTANCE_VARS: >
+  {"partnerid":"id","partnerkey": "key", "token": "token", "modified_begin": "", "page_size": 50, "step_days": 7, "loop_times": 1}
+DCS_QUEUE_CONFIG: >
+  {"uri": "amqps://user:password@gerbil.rmq.cloudamqp.com/ydvlsggd", "exchange_name":"exchange_name", "queue_name": "queue_name", "routing_key": "routing_key"}
+quarkus:
+  log:
+    category:
+      org.eclipse.microprofile.rest.client:
+        level: DEBUG
+# quarkus.resteasy-json.default-json=false
+DCS_TO_PLUGIN_1: ENC(B3ZWJ9p6kvyrtfpZmKEKN+o4crwpa/8+OYEJldN80SyHLci8Ynt6VKya6QL6LtSrzI5KV5Emzoa3aGBVIjKVqFifNb9bsiFQ3sCna1UWc+0ZdFbPN/m7aR9s94hg7rkVL+Jf5U5oQsJW3JWGl8qWfhNAkgy64IpZNDsSJejUz597g4TcYIoiW//HKeOUEOHebnUndOaf0/vJVuHh8q0PD4WEetK87vnA7je9EbFEXTws3LDnjtQAuAOs0N40rqOSVOiue07xn6rTx44qT7FRPx7fATMPTBLEfrz6MJDir0Tujbe9GmIlRIYZLaMyGMLpznESyv9na7Dorjh9KxA44MHQjmxxUNqXAZdZWuULldZe4xxpA9CCogGAs+15E+A3ooJcHV/lUcKeddFvtEbUYFlcujsLCLug8Tbw04o1QDOAMrpJSIHB6O4NIP0dnZmrywLHt8OrmAe7g34XD7MdNsMymcTb6QSrZqrzyT4q9XYCZnEt1KRWnyGZXPxjBAAWglI7PwND4zJK7+1JSxfTulNPb8LlM0TrRU0cskk09+XjNgCSLuP3T/1D+x4ZPqFJ4uuEwrH4nGceBn44MDeJUMU1vpedS+ZKcRD7aX1kFZVjup2w94XLcF1tQcPLpsryvqbRk20Lq8dVNxwILZg0MggRiEWTk03RsE3ccIi9u/n4+6HkElgZ4NmpR9jV8CnEe+MPoLQDfZ/NIUPBq/1P8xFGMaC/Tox08i040qAwcF9yAhw6Z+nmUI6hzt6mU3j7B35TzxsKhhSCPzfPWN87SV+ZIgEFgl7buTvtuHU7lum3b+F1oNlre6lSAYxQPx6o9puc0s2jcXVjRf6FzvH4te5LG783ZE9LmRJ7aDd4OjOFhqtVpDBlQj85QnDgSkx1TAy2ZlnfL0Y2ZVX5IWWF5Ikp23ly5QeCVUHqfEaJiZnSHTNmsmYo37K9px6QC3II8/bk38N57Q5uIXnnS9WY94LdLT4PnTn/UuCcqU6C9gB4R097sfdRiUxmV75EAvSHWHeNQTi/MiQbnz4qfR32mNZTkQpSOvACtUjmix1QVKhFW6xeeg1uyqbv7drdaF5/9Ol1tIWo6DLGII+Dnh4G1GpURA6Uw8EC0VYzlQ2Nj2ktfkp3McE8fBGsmd3UMh+7R05DwwxUI0WPp4oSk4TxXSOqttxiMcA/5UoCbt9b3RqQaoNcFzeUKJfXr9qFiYpGwyd2NAD0Nm4bB4wDee5CE8eZIsljj3zcI888JWSl+f45znViYFJZdHN8Wt7cBs0zGVIUcU1ZP5ZQhTZkJGUQ0ehL4D2cRyM2XvdmbhlFzPx8JiXIU9z2k6++TaRyXuZ3L6aFMJqsq/kZpKsZrBfaPpaSOba1BplTprUEr3uXfL7rdHl2oEqCSW5mAWouqXkC)
+DCS_TO_PLUGIN_MOCK_1: >
+  {
+    "output_to": {"type": "STDIO", "settings": {"separator": "08877f24-464a-4867-b58c-6b500349dae1"}},
+    "plugin_instance": {},
+    "state": {}
+  }

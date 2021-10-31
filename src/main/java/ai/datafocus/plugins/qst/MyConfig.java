@@ -1,6 +1,7 @@
 package ai.datafocus.plugins.qst;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,8 +18,10 @@ import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
 import ai.datafocus.plugins.qst.dto.MockState;
 import ai.datafocus.plugins.qst.dto.OutputType;
 import ai.datafocus.plugins.qst.dto.ToPlugin;
+import ai.datafocus.plugins.qst.dto.ToPluginMock;
 import ai.datafocus.plugins.qst.rest.TimeStep;
 import ai.datafocus.plugins.qst.util.JasyptUtil;
+import io.quarkus.logging.Log;
 import lombok.Data;
 import lombok.Getter;
 
@@ -27,7 +30,10 @@ import lombok.Getter;
 public class MyConfig {
 
   @ConfigProperty(name = "DCS_TO_PLUGIN")
-  String toPluginStr;
+  Optional<String> toPluginStr;
+
+  @ConfigProperty(name = "DCS_TO_PLUGIN_MOCK")
+  Optional<String> toPluginStrMock;
 
   TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
 
@@ -65,9 +71,9 @@ public class MyConfig {
    */
   public MyConfig parese() throws JsonMappingException, JsonProcessingException {
     // test toPluginStr. 可能是加密的字串，需要解密
-    String toPluginJsonStr = toPluginStr;
-    if (!toPluginStr.trim().startsWith("{")) { // it's not a json string
-      toPluginJsonStr = JasyptUtil.decrypt(toPluginStr);
+    String toPluginJsonStr = toPluginStr.orElse("{}");
+    if (!toPluginJsonStr.trim().startsWith("{")) { // it's not a json string
+      toPluginJsonStr = JasyptUtil.decrypt(toPluginJsonStr);
     }
     ToPlugin toPlugin = mapper.readValue(toPluginJsonStr, ToPlugin.class);
 
@@ -92,15 +98,16 @@ public class MyConfig {
     return this;
   }
 
-  public MyConfig pareseMock() throws JsonMappingException, JsonProcessingException {
-    // test toPluginStr. 可能是加密的字串，需要解密
-    String toPluginJsonStr = toPluginStr;
-    if (!toPluginStr.trim().startsWith("{")) { // it's not a json string
-      toPluginJsonStr = JasyptUtil.decrypt(toPluginStr);
-    }
-    ToPlugin toPlugin = mapper.readValue(toPluginJsonStr, ToPlugin.class);
+  public MyConfig pareseMock(int per_page, int name_length)
+      throws JsonMappingException, JsonProcessingException {
+
+    ToPluginMock toPlugin = mapper.readValue(toPluginStrMock.orElse("{}"), ToPluginMock.class);
 
     OutputType output_to = toPlugin.getOutput_to();
+    if (toPluginStrMock.isEmpty()) {
+      Log.warn("NO DCS_TO_PLUGIN_MOCK environment variable is defined, use empty {} instead.");
+      output_to = OutputType.defaultOutputType("--hello-separator--");
+    }
 
     this.separator = (String) output_to.getSettings().get("separator");
 
@@ -110,13 +117,16 @@ public class MyConfig {
 
     this.dcsPluginInstance = toPlugin.getPlugin_instance();
 
-    if (toPlugin.getState() == null) {
-      setInitTimeStep();
+    if (toPlugin.getState() == null || toPlugin.getState().getPer_page() == 0) {
+      this.mockState =
+          MockState.builder()
+              .current_id(1)
+              .current_page(1)
+              .per_page(per_page)
+              .name_length(name_length)
+              .build();
     } else { // 通常情况下，控制器传过来的时候已经将state从字符串变成了json
-      timeStep = toPlugin.getState();
-      if (timeStep.getModified_begin() == null) {
-        setInitTimeStep();
-      }
+      this.mockState = toPlugin.getState();
     }
     return this;
   }
