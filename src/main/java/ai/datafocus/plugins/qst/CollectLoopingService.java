@@ -1,7 +1,5 @@
 package ai.datafocus.plugins.qst;
 
-import java.io.IOException;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -25,7 +23,6 @@ public class CollectLoopingService {
 
   @Inject Logger log;
 
-  @Inject RabbitmqService rabbitmqService;
   @Inject MyConfig myconfig;
   @Inject ObjectMapper mapper;
 
@@ -45,11 +42,11 @@ public class CollectLoopingService {
     while (timeStep != null) {
       OrderQueryResult result = jushuitanResource.getOrders(timeStep.toOrderQueryBody());
       for (Order order : result.getOrders()) {
-        try {
-          rabbitmqService.publish(order);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        // try {
+        //   // rabbitmqService.publish(order);
+        // } catch (IOException e) {
+        //   e.printStackTrace();
+        // }
       }
       // Log.info(result);
       timeStep = timeStep.nextPage(result.getOrders().size());

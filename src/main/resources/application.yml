@@ -21,3 +21,14 @@ DCS_TO_PLUGIN_MOCK_1: >
     "plugin_instance": {},
     "state": {}
   }
+quarkus:
+  index-dependency:
+  -  name:
+     group-id: com.fasterxml.jackson.core
+     artifact-id: jackson-core
+     classifier:
+  - name1:
+     group-id: org.jboss.logging
+     artifact-id: jboss-logging
+     classifier:
+  
