@@ -32,8 +32,8 @@ public class MyConfig {
   @ConfigProperty(name = "DCS_TO_PLUGIN")
   Optional<String> toPluginStr;
 
-  @ConfigProperty(name = "DCS_TO_PLUGIN_MOCK")
-  Optional<String> toPluginStrMock;
+  // @ConfigProperty(name = "DCS_TO_PLUGIN_MOCK")
+  // Optional<String> toPluginStrMock;
 
   TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
 
@@ -101,13 +101,15 @@ public class MyConfig {
   public MyConfig pareseMock(int per_page, int name_length)
       throws JsonMappingException, JsonProcessingException {
 
-    ToPluginMock toPlugin = mapper.readValue(toPluginStrMock.orElse("{}"), ToPluginMock.class);
+    ToPluginMock toPlugin = mapper.readValue(toPluginStr.orElse("{}"), ToPluginMock.class);
 
     OutputType output_to = toPlugin.getOutput_to();
-    if (toPluginStrMock.isEmpty()) {
-      Log.warn("NO DCS_TO_PLUGIN_MOCK environment variable is defined, use empty {} instead.");
-      output_to = OutputType.defaultOutputType("--hello-separator--");
-    }
+    // if (toPluginStr.isEmpty()) {
+    //   toPlugin = mapper.readValue(toPluginStr.orElse("{}"), ToPluginMock.class);
+    //   output_to = toPlugin.getOutput_to(); 
+    //   // Log.warn("NO DCS_TO_PLUGIN_MOCK environment variable is defined, use empty {} instead.");
+    //   // output_to = OutputType.defaultOutputType("--hello-separator--");
+    // }
 
     this.separator = (String) output_to.getSettings().get("separator");
 

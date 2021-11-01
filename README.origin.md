@@ -29,6 +29,10 @@ If you want to build an _über-jar_, execute the following command:
 ./gradlew build -Dquarkus.package.type=uber-jar
 ```
 
+```powershell
+./gradlew build "-Dquarkus.package.type=uber-jar"
+```
+
 The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
 
 ## Creating a native executable
