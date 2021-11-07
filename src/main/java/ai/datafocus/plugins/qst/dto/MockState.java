@@ -1,5 +1,6 @@
 package ai.datafocus.plugins.qst.dto;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Builder
+@RegisterForReflection
 public class MockState {
   private int current_id;
   private int current_page;

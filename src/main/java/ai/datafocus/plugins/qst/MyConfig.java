@@ -20,8 +20,6 @@ import ai.datafocus.plugins.qst.dto.OutputType;
 import ai.datafocus.plugins.qst.dto.ToPlugin;
 import ai.datafocus.plugins.qst.dto.ToPluginMock;
 import ai.datafocus.plugins.qst.rest.TimeStep;
-import ai.datafocus.plugins.qst.util.JasyptUtil;
-import io.quarkus.logging.Log;
 import lombok.Data;
 import lombok.Getter;
 
@@ -72,9 +70,9 @@ public class MyConfig {
   public MyConfig parese() throws JsonMappingException, JsonProcessingException {
     // test toPluginStr. 可能是加密的字串，需要解密
     String toPluginJsonStr = toPluginStr.orElse("{}");
-    if (!toPluginJsonStr.trim().startsWith("{")) { // it's not a json string
-      toPluginJsonStr = JasyptUtil.decrypt(toPluginJsonStr);
-    }
+    // if (!toPluginJsonStr.trim().startsWith("{")) { // it's not a json string
+    //   toPluginJsonStr = JasyptUtil.decrypt(toPluginJsonStr);
+    // }
     ToPlugin toPlugin = mapper.readValue(toPluginJsonStr, ToPlugin.class);
 
     OutputType output_to = toPlugin.getOutput_to();

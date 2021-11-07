@@ -1,9 +1,11 @@
 package ai.datafocus.plugins.qst.dto;
 
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 
 @Data
+@RegisterForReflection
 public class DcsPluginInstance {
 
   private Integer id;
