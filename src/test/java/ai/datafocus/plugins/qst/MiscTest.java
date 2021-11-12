@@ -7,7 +7,7 @@ import java.util.Base64;
 
 import org.junit.jupiter.api.Test;
 
-import ai.datafocus.plugins.qst.util.JasyptUtil;
+// import ai.datafocus.plugins.qst.util.JasyptUtil;
 
 public class MiscTest {
   
@@ -20,11 +20,11 @@ public class MiscTest {
     System.out.println(lastString);
   }
 
-  @Test
-  void tJasypt() throws IOException {
-    String stringToEncode = UtilFort.loadFromResource("to-plugin.json");
-    String lastString = JasyptUtil.encrypt(stringToEncode);
-    assertThat(lastString).startsWith("ENC(");
-    System.out.println(lastString);
-  }
+  // @Test
+  // void tJasypt() throws IOException {
+  //   String stringToEncode = UtilFort.loadFromResource("to-plugin.json");
+  //   String lastString = JasyptUtil.encrypt(stringToEncode);
+  //   assertThat(lastString).startsWith("ENC(");
+  //   System.out.println(lastString);
+  // }
 }

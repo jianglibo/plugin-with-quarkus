@@ -24,13 +24,13 @@ public class MockDataCommand implements Runnable {
   @Inject AppUtil appUtil;
   @Inject MyConfig myconfig;
 
-  @CommandLine.Option(names = "--per-page", description = "number of the items per page.")
+  @CommandLine.Option(names = "--per-page", description = "number of the items per page. default ${DEFAULT-VALUE}")
   int perPage = 100;
 
-  @CommandLine.Option(names = "--pages", description = "the total page number.")
+  @CommandLine.Option(names = "--pages", description = "the total page number. default: ${DEFAULT-VALUE}")
   int pages = 10;
 
-  @CommandLine.Option(names = "--name-length", description = "the length of the name field.")
+  @CommandLine.Option(names = "--name-length", description = "the length of the name field. default: ${DEFAULT-VALUE}")
   int nameLength = 50;
 
   @Override

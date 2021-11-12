@@ -10,7 +10,10 @@
 
 ```json
 {
-        "vars": "{\"a\": 1, \"b\": \"bb\"}",
+        "vars": {
+          "a": 1,
+          "b": "bb"
+        },
         "table_description": "{\n\"columns\": [\n{\"name\": \"o_id\", \"type\": \"int\", \"isKey\": true},\n{\"name\": \"order_date\", \"type\": \"timestamp\", \"isKey\": false}\n]\n}",
         "secret": "x22c5254-5661-44d8-9e98-ace658b9078c",
         "output_to": "STDIO",
