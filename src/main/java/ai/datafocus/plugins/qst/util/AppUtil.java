@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import ai.datafocus.plugins.qst.MyConfig;
 
@@ -24,6 +25,6 @@ public class AppUtil {
   }
 
   public void printOutDataJson(Object data) throws JsonProcessingException {
-    printOutDataString(mapper.writeValueAsString(data));
+    printOutDataString(mapper.enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(data));
   }
 }
