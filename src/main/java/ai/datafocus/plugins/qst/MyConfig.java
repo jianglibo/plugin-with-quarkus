@@ -23,15 +23,12 @@ import ai.datafocus.plugins.qst.rest.TimeStep;
 import lombok.Data;
 import lombok.Getter;
 
-/** 通常你可以在这里解析DCS_TO_PLUGIN的意义。 */
 @Singleton
 public class MyConfig {
 
+  /** from environment variable. Plugin server will prepare for you. */
   @ConfigProperty(name = "DCS_TO_PLUGIN")
   Optional<String> toPluginStr;
-
-  // @ConfigProperty(name = "DCS_TO_PLUGIN_MOCK")
-  // Optional<String> toPluginStrMock;
 
   TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
 
@@ -68,11 +65,7 @@ public class MyConfig {
    * @throws JsonProcessingException
    */
   public MyConfig parese() throws JsonMappingException, JsonProcessingException {
-    // test toPluginStr. 可能是加密的字串，需要解密
     String toPluginJsonStr = toPluginStr.orElse("{}");
-    // if (!toPluginJsonStr.trim().startsWith("{")) { // it's not a json string
-    //   toPluginJsonStr = JasyptUtil.decrypt(toPluginJsonStr);
-    // }
     ToPlugin toPlugin = mapper.readValue(toPluginJsonStr, ToPlugin.class);
 
     OutputType output_to = toPlugin.getOutput_to();
@@ -102,12 +95,6 @@ public class MyConfig {
     ToPluginMock toPlugin = mapper.readValue(toPluginStr.orElse("{}"), ToPluginMock.class);
 
     OutputType output_to = toPlugin.getOutput_to();
-    // if (toPluginStr.isEmpty()) {
-    //   toPlugin = mapper.readValue(toPluginStr.orElse("{}"), ToPluginMock.class);
-    //   output_to = toPlugin.getOutput_to(); 
-    //   // Log.warn("NO DCS_TO_PLUGIN_MOCK environment variable is defined, use empty {} instead.");
-    //   // output_to = OutputType.defaultOutputType("--hello-separator--");
-    // }
 
     this.separator = (String) output_to.getSettings().get("separator");
 
@@ -125,7 +112,7 @@ public class MyConfig {
               .per_page(per_page)
               .name_length(name_length)
               .build();
-    } else { // 通常情况下，控制器传过来的时候已经将state从字符串变成了json
+    } else { 
       this.mockState = toPlugin.getState();
     }
     return this;
