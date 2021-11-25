@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @RegisterForReflection
-public class ToPluginMock {
+public class ToPluginStdio {
   private OutputType output_to;
   private DcsPluginInstance plugin_instance;
   private MockState state;

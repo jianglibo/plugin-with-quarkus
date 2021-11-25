@@ -17,8 +17,8 @@ import ai.datafocus.plugins.qst.util.AppUtil;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-@Command(name = "mock", mixinStandardHelpOptions = true)
-public class MockDataCommand implements Runnable {
+@Command(name = "stdio", mixinStandardHelpOptions = true)
+public class StdioDataCommand implements Runnable {
 
   @Inject ObjectMapper mapper;
   @Inject AppUtil appUtil;

@@ -15,11 +15,11 @@ java -jar build/*-runner.jar
 ## Example run
 
 ```bash
-java -jar build/*-runner.jar mock --name-length=6 --pages=1 --per-page=10
+java -jar build/*-runner.jar stdio --name-length=6 --pages=1 --per-page=10
 ```
 
 ```powershell
-java -jar .\build\plugin-with-quarkus-1.0.0-SNAPSHOT-runner.jar mock --name-length=6 --pages=1 --per-page=3
+java -jar .\build\plugin-with-quarkus-1.0.0-SNAPSHOT-runner.jar stdio --name-length=6 --pages=1 --per-page=3
 ```
 
 The output:

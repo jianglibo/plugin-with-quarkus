@@ -4,7 +4,7 @@ import io.quarkus.picocli.runtime.annotations.TopCommand;
 import picocli.CommandLine;
 
 @TopCommand
-@CommandLine.Command(mixinStandardHelpOptions = true, subcommands = {MockDataCommand.class, CollectDataCommand.class})
+@CommandLine.Command(mixinStandardHelpOptions = true, subcommands = {StdioDataCommand.class})
 public class EntryCommand {
 	
 }
