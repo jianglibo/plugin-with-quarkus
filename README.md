@@ -56,3 +56,9 @@ The output:
 }
 08877f24-464a-4867-b58c-6b500349dae1
 ```
+
+## some git command
+* git push origin v0.1.0
+* git tag --delete v0.1.0
+* git push --delete origin v0.1.0
+* gh release create v0.1.0

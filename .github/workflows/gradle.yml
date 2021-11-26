@@ -37,5 +37,5 @@ jobs:
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./build/plugin-with-quarkus-${{ github.event.release.tag_name }}-runner.jar
-        asset_name: quarkus-ls-${{ github.event.release.tag_name }}-linux
+        asset_name: plugin-with-quarkus-${{ github.event.release.tag_name }}-runner.jar
         asset_content_type: application/octet-stream
