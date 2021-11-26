@@ -3,6 +3,9 @@
 * 配置文件是resources/application.yml和对应的MyConfig.java
 * 如果不确定某个值从哪里来，那么很可能是从环境变量而来。 环境变量会覆盖application.yml的配置值。
 
+## 下载地址
+
+[https://github.com/jianglibo/plugin-with-quarkus/releases](https://github.com/jianglibo/plugin-with-quarkus/releases)
 
 
 ## Build and run
@@ -58,11 +61,11 @@ The output:
 ```
 
 ## some git command
-* git tag v0.1.0
-* git push origin v0.1.0
-* git tag --delete v0.1.0
-* git push --delete origin v0.1.0
-* gh release create v0.1.0
-* gh release delete v0.1.0
+* git tag v0.1.
+* git push origin v0.1.
+* git tag --delete v0.1.
+* git push --delete origin v0.1.
+* gh release create v0.1.
+* gh release delete v0.1.
 * ./gradlew createRelease
-* git push origin r-name
+* git push origin v0.1.
