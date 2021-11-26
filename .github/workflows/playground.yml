@@ -7,10 +7,10 @@ on:
   # release:
   #   types: [created]
   #   # Draft a new release
-  push:
+  # push:
+  #   branches: [ main ]
+  pull_request:
     branches: [ main ]
-#   pull_request:
-#     branches: [ main ]
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: prepare value
+    - name: strip v from version tag
       id: strip-v
       run: |
         echo "::set-output name=no_v_prefix::`echo -n 'v0.1.0' | sed -e 's/v//g'`"
