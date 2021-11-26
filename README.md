@@ -1,3 +1,10 @@
+## 源代码简介
+* 入口是EntryCommand.java
+* 配置文件是resources/application.yml和对应的MyConfig.java
+* 如果不确定某个值从哪里来，那么很可能是从环境变量而来。 环境变量会覆盖application.yml的配置值。
+
+
+
 ## Build and run
 
 ```bash
