@@ -58,7 +58,11 @@ The output:
 ```
 
 ## some git command
+* git tag v0.1.0
 * git push origin v0.1.0
 * git tag --delete v0.1.0
 * git push --delete origin v0.1.0
 * gh release create v0.1.0
+* gh release delete v0.1.0
+* ./gradlew createRelease
+* git push origin r-name
