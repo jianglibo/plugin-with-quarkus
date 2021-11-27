@@ -8,15 +8,22 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.inject.Inject;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
 import ai.datafocus.plugins.qst.dto.MockOutOfPlugin;
 import ai.datafocus.plugins.qst.dto.MockRow;
 import ai.datafocus.plugins.qst.dto.MockState;
+import ai.datafocus.plugins.qst.dto.OutputType;
+import ai.datafocus.plugins.qst.dto.ToPluginStdio;
 import ai.datafocus.plugins.qst.util.AppUtil;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+/**
+ * This command doesn't need to know the instanceId.
+ */
 @Command(name = "stdio", mixinStandardHelpOptions = true)
 public class StdioDataCommand implements Runnable {
 
@@ -33,11 +40,16 @@ public class StdioDataCommand implements Runnable {
   @CommandLine.Option(names = "--name-length", description = "the length of the name field. default: ${DEFAULT-VALUE}")
   int nameLength = 50;
 
+  private MockState state;
+
+  private String separator;
+
+  private DcsPluginInstance dcsPluginInstance;
+
   @Override
   public void run() {
     try {
-      MockState state = myconfig.pareseMock(perPage, nameLength).getMockState();
-
+      pareseStdioMock(perPage, nameLength);
       List<MockRow> rows = new ArrayList<>();
       if (state.getCurrent_page() <= pages) {
         rows = genRandomRow(state);
@@ -79,4 +91,31 @@ public class StdioDataCommand implements Runnable {
         .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
         .toString();
   }
+    public void pareseStdioMock(int per_page, int name_length)
+      throws JsonMappingException, JsonProcessingException {
+
+    ToPluginStdio toPlugin = mapper.readValue(myconfig.toPluginStr.orElse("{}"), ToPluginStdio.class);
+
+    OutputType output_to = toPlugin.getOutput_to();
+
+    this.separator = (String) output_to.getSettings().get("separator");
+
+    if (separator == null) {
+      throw new RuntimeException("separator is a must. may use uuid.");
+    }
+
+    this.dcsPluginInstance = toPlugin.getPlugin_instance();
+
+    if (toPlugin.getState() == null || toPlugin.getState().getPer_page() == 0) {
+      this.state = MockState.builder()
+          .current_id(1)
+          .current_page(1)
+          .per_page(per_page)
+          .name_length(name_length)
+          .build();
+    } else {
+      this.state = toPlugin.getState();
+    }
+  }
+
 }
