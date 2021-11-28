@@ -16,19 +16,15 @@ dependencies {
     implementation 'io.quarkus:quarkus-rest-client-jackson'
     implementation 'io.quarkus:quarkus-config-yaml'
     implementation 'io.lettuce:lettuce-core:6.1.5.RELEASE'
+    implementation 'org.redisson:redisson:3.16.3'  
     // implementation 'io.quarkus:quarkus-arc'
     // implementation 'io.quarkus:quarkus-resteasy'
     // https://mvnrepository.com/artifact/com.rabbitmq/amqp-client
     // implementation 'com.rabbitmq:amqp-client:5.13.1'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
-
-
-
     // https://mvnrepository.com/artifact/org.jasypt/jasypt
     // implementation group: 'org.jasypt', name: 'jasypt', version: '1.9.3'
-
-
     testImplementation("org.assertj:assertj-core:3.21.0")
     
     compileOnly 'org.projectlombok:lombok:1.18.22'

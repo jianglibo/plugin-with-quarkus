@@ -1,34 +1,27 @@
 package ai.datafocus.plugins.qst;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.inject.Inject;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
-import ai.datafocus.plugins.qst.dto.MockOutOfPlugin;
-import ai.datafocus.plugins.qst.dto.MockRow;
-import ai.datafocus.plugins.qst.dto.MockState;
 import ai.datafocus.plugins.qst.dto.OutputType;
 import ai.datafocus.plugins.qst.dto.ToPluginStdio;
 import ai.datafocus.plugins.qst.util.AppUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.quarkus.logging.Log;
+import javax.inject.Inject;
 import lombok.Getter;
+import org.redisson.Redisson;
+import org.redisson.api.RTopic;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-/**
- * This command need to know the instanceId.
- */
+/** This command need to know the instanceId. */
 @Command(name = "redis", mixinStandardHelpOptions = true)
 public class RedisDataCommand implements Runnable {
 
@@ -36,33 +29,47 @@ public class RedisDataCommand implements Runnable {
   @Inject AppUtil appUtil;
   @Inject MyConfig myconfig;
 
-  @CommandLine.Option(names = "--per-page", description = "number of the items per page. default ${DEFAULT-VALUE}")
-  int perPage = 100;
+  @CommandLine.Option(
+      names = "--howmany",
+      description = "the total page number. default: ${DEFAULT-VALUE}")
+  int howmany = 10;
 
-  @CommandLine.Option(names = "--pages", description = "the total page number. default: ${DEFAULT-VALUE}")
-  int pages = 10;
-
-  @CommandLine.Option(names = "--name-length", description = "the length of the name field. default: ${DEFAULT-VALUE}")
+  @CommandLine.Option(
+      names = "--name-length",
+      description = "the length of the name field. default: ${DEFAULT-VALUE}")
   int nameLength = 50;
 
-  @Getter
-  String host;
-  @Getter
-  int port;
-  @Getter
-  String username;
-  @Getter
-  String password;
-  @Getter
-  String channel;
-  @Getter
-  String key;
+  @Getter String host;
+  @Getter int port;
+  @Getter String username;
+  @Getter String password;
+  @Getter String channel;
+  @Getter String key;
 
   String separator;
   DcsPluginInstance dcsPluginInstance;
 
   @Override
   public void run() {
+    try {
+      pareseRedisMock();
+      lettuce();
+    } catch (Exception e) {
+      // 如果程序的IO输出中包含传递进来的separator，那么整个IO输出的内容会保存在数据库中
+      // 插件的作者可以有权限查询，用于调试可能的状况。
+      System.out.println(separator);
+      Log.error(e);
+      Log.error(e.getCause());
+      try {
+        redis();
+      } catch (Exception e1) {
+        Log.error(e1);
+        Log.error(e1.getCause());
+      }
+    }
+  }
+
+  private void lettuce() throws JsonProcessingException {
     RedisURI uri = RedisURI.create(host, port);
     if (!username.isBlank()) {
       uri.setUsername(username);
@@ -72,17 +79,29 @@ public class RedisDataCommand implements Runnable {
     RedisClient redisClient = RedisClient.create(uri);
     StatefulRedisConnection<String, String> connection = redisClient.connect();
     RedisCommands<String, String> syncCommands = connection.sync();
-    String message = "message";
-        long n =
-        syncCommands.publish(
-            channel, message == null ? username + " published a message." : message);
+
+    for (int i = 0; i < howmany; i++) {
+      String message = mapper.writeValueAsString(AppUtil.genRandomRow(i, nameLength));
+      syncCommands.publish(channel, message);
+    }
   }
 
+  public void redis() throws JsonProcessingException {
+    Config config = new Config();
+    String address = String.format("redis://%s:%s", host, port);
+    config.useSingleServer().setAddress(address).setPassword(password);
+    RedissonClient client = Redisson.create(config);
+    RTopic topic = client.getTopic(channel);
+    for (int i = 0; i < howmany; i++) {
+      String message = mapper.writeValueAsString(AppUtil.genRandomRow(i, nameLength));
+      topic.publish(message);
+    }
+  }
 
-  public void pareseRedisMock(int per_page, int name_length)
-      throws JsonMappingException, JsonProcessingException {
+  public void pareseRedisMock() throws JsonMappingException, JsonProcessingException {
 
-    ToPluginStdio toPlugin = mapper.readValue(myconfig.toPluginStr.orElse("{}"), ToPluginStdio.class);
+    ToPluginStdio toPlugin =
+        mapper.readValue(myconfig.toPluginStr.orElse("{}"), ToPluginStdio.class);
 
     OutputType output_to = toPlugin.getOutput_to();
 
@@ -109,32 +128,5 @@ public class RedisDataCommand implements Runnable {
       throw new RuntimeException("separator is a must. may use uuid.");
     }
     this.dcsPluginInstance = toPlugin.getPlugin_instance();
-  }
-
-  private List<MockRow> genRandomRow(MockState state) {
-    List<MockRow> rows = new ArrayList<>();
-    int max = state.getCurrent_id() + state.getPer_page();
-    for (int i = state.getCurrent_id(); i < max; i++) {
-      MockRow row =
-          MockRow.builder()
-              .id(i)
-              .age(ThreadLocalRandom.current().nextInt(120))
-              .name(randomString(nameLength))
-              .build();
-      rows.add(row);
-    }
-    return rows;
-  }
-
-  private String randomString(int targetStringLength) {
-    int leftLimit = 97; // letter 'a'
-    int rightLimit = 122; // letter 'z'
-    Random random = new Random();
-
-    return random
-        .ints(leftLimit, rightLimit + 1)
-        .limit(targetStringLength)
-        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-        .toString();
   }
 }
