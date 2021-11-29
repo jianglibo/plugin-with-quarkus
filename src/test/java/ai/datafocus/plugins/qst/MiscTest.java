@@ -4,13 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.Base64;
-
 import org.junit.jupiter.api.Test;
 
 // import ai.datafocus.plugins.qst.util.JasyptUtil;
 
 public class MiscTest {
-  
+
   @Test
   void encode() throws IOException {
     String stringToEncode = UtilFort.loadFromResource("to-plugin.json");
