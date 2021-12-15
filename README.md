@@ -69,7 +69,6 @@ The output:
 * git tag v0.1.
 * git push origin v0.1.
 * gh release create v0.1.
-* git push origin v0.1.
 
 ## re release
 * git tag --delete v0.1.
