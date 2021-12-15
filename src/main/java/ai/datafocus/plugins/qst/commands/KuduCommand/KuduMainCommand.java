@@ -12,7 +12,7 @@ import picocli.CommandLine.Command;
 @Command(
     name = "kudu",
     mixinStandardHelpOptions = true,
-    subcommands = {KuduCreateTable.class})
+    subcommands = {KuduCreateTable.class, KuduRecordCount.class})
 public class KuduMainCommand {
 
   @Inject ObjectMapper mapper;

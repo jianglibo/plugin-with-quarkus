@@ -27,7 +27,12 @@ quarkus:
     artifact-id: kudu-client
     classifer:
   package:
-    uber-jar: true
+    type: uber-jar
+  log:
+    level: ERROR
+    # category:
+    #   io.qua.config:
+    #     level: ERROR
   native:
     additional-build-args:
       - --trace-class-initialization=io.netty.resolver.dns.DnsNameResolver,io.netty.resolver.HostsFileEntriesResolver,io.netty.resolver.dns.DnsServerAddressStreamProviders$DefaultProviderHolder
