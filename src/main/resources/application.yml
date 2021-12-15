@@ -21,6 +21,10 @@ quarkus:
      group-id: org.jboss.logging
      artifact-id: jboss-logging
      classifier:
+  - name2:
+    group-id: org.apache.kudu
+    artifact-id: kudu-client
+    classifer:
   package:
     uber-jar: true
 kudu:

@@ -65,11 +65,13 @@ The output:
 ```
 
 ## some git command
+* ./gradlew createRelease
 * git tag v0.1.
 * git push origin v0.1.
+* gh release create v0.1.
+* git push origin v0.1.
+
+## re release
 * git tag --delete v0.1.
 * git push --delete origin v0.1.
-* gh release create v0.1.
 * gh release delete v0.1.
-* ./gradlew createRelease
-* git push origin v0.1.
