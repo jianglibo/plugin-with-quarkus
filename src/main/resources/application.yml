@@ -28,8 +28,8 @@ quarkus:
     classifer:
   package:
     type: uber-jar
-  log:
-    level: ERROR
+  # log:
+  #   level: ERROR
     # category:
     #   io.qua.config:
     #     level: ERROR
