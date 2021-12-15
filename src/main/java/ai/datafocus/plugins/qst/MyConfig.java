@@ -23,7 +23,9 @@ import lombok.Getter;
 public class MyConfig {
 
   /** from environment variable. Plugin server will prepare for you. */
+  @Inject
   @ConfigProperty(name = "DCS_TO_PLUGIN")
+  @Getter
   Optional<String> toPluginStr;
 
   TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {

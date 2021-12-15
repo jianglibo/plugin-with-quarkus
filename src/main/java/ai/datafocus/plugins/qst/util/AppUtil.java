@@ -1,6 +1,5 @@
 package ai.datafocus.plugins.qst.util;
 
-import ai.datafocus.plugins.qst.MyConfig;
 import ai.datafocus.plugins.qst.dto.MockRow;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,20 +12,19 @@ import javax.inject.Singleton;
 @Singleton
 public class AppUtil {
 
-  @Inject MyConfig myconfig;
-
   @Inject ObjectMapper mapper;
 
-  public void printOutDataString(String data) {
+  public void printOutDataString(String data, String separator) {
     System.out.println();
-    System.out.println(myconfig.getSeparator());
+    System.out.println(separator);
     System.out.println(data);
-    System.out.println(myconfig.getSeparator());
+    System.out.println(separator);
     System.out.println();
   }
 
-  public void printOutDataJson(Object data) throws JsonProcessingException {
-    printOutDataString(mapper.enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(data));
+  public void printOutDataJson(Object data, String separator) throws JsonProcessingException {
+    printOutDataString(
+        mapper.enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(data), separator);
   }
 
   public static String randomString(int targetStringLength) {

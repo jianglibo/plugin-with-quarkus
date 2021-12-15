@@ -4,6 +4,7 @@ jushuitan-api:
   mp-rest:
     url: https://c.jushuitan.com
     scope: javax.inject.Singleton
+# SendToPlugin type in the dcs-plugin-server project.
 DCS_TO_PLUGIN: >
   {
     "output_to": {"type": "STDIO", "settings": {"separator": "08877f24-464a-4867-b58c-6b500349dae1"}},
@@ -22,4 +23,6 @@ quarkus:
      classifier:
   package:
     uber-jar: true
+kudu:
+  master: 161.189.46.49:7051
   

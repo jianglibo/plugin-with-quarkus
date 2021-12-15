@@ -1,5 +1,6 @@
-package ai.datafocus.plugins.qst;
+package ai.datafocus.plugins.qst.commands;
 
+import ai.datafocus.plugins.qst.EntryCommand;
 import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
 import ai.datafocus.plugins.qst.dto.MockOutOfPlugin;
 import ai.datafocus.plugins.qst.dto.MockRow;
@@ -15,6 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.ParentCommand;
 
 /** This command doesn't need to know the instanceId. */
 @Command(name = "stdio", mixinStandardHelpOptions = true)
@@ -22,7 +24,8 @@ public class StdioDataCommand implements Runnable {
 
   @Inject ObjectMapper mapper;
   @Inject AppUtil appUtil;
-  @Inject MyConfig myconfig;
+
+  @ParentCommand EntryCommand parent;
 
   @CommandLine.Option(
       names = "--per-page",
@@ -56,7 +59,7 @@ public class StdioDataCommand implements Runnable {
       state.increamentCurrentPage();
       MockOutOfPlugin outOfPlugin = MockOutOfPlugin.builder().state(state).data(rows).build();
 
-      appUtil.printOutDataJson(outOfPlugin);
+      appUtil.printOutDataJson(outOfPlugin, separator);
     } catch (JsonProcessingException e) {
       e.printStackTrace();
       System.exit(1);
@@ -77,7 +80,7 @@ public class StdioDataCommand implements Runnable {
       throws JsonMappingException, JsonProcessingException {
 
     ToPluginStdio toPlugin =
-        mapper.readValue(myconfig.toPluginStr.orElse("{}"), ToPluginStdio.class);
+        mapper.readValue(parent.getMyconfig().getToPluginStr().orElse("{}"), ToPluginStdio.class);
 
     OutputType output_to = toPlugin.getOutput_to();
 

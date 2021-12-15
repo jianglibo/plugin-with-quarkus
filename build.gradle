@@ -25,6 +25,7 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured'
     // https://mvnrepository.com/artifact/org.jasypt/jasypt
     // implementation group: 'org.jasypt', name: 'jasypt', version: '1.9.3'
+    implementation "org.apache.kudu:kudu-client:1.15.0"
     testImplementation("org.assertj:assertj-core:3.21.0")
     
     compileOnly 'org.projectlombok:lombok:1.18.22'

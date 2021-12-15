@@ -1,5 +1,6 @@
-package ai.datafocus.plugins.qst;
+package ai.datafocus.plugins.qst.commands;
 
+import ai.datafocus.plugins.qst.MyConfig;
 import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
 import ai.datafocus.plugins.qst.dto.OutputType;
 import ai.datafocus.plugins.qst.dto.ToPluginStdio;
@@ -101,7 +102,7 @@ public class RedisDataCommand implements Runnable {
   public void pareseRedisMock() throws JsonMappingException, JsonProcessingException {
 
     ToPluginStdio toPlugin =
-        mapper.readValue(myconfig.toPluginStr.orElse("{}"), ToPluginStdio.class);
+        mapper.readValue(myconfig.getToPluginStr().orElse("{}"), ToPluginStdio.class);
 
     OutputType output_to = toPlugin.getOutput_to();
 
