@@ -1,5 +1,6 @@
 package ai.datafocus.plugins.qst;
 
+import ai.datafocus.plugins.qst.commands.DisplayConfigCommand;
 import ai.datafocus.plugins.qst.commands.KuduCommand.KuduMainCommand;
 import ai.datafocus.plugins.qst.commands.RedisDataCommand;
 import ai.datafocus.plugins.qst.commands.StdioDataCommand;
@@ -13,7 +14,12 @@ import picocli.CommandLine.ScopeType;
 @TopCommand
 @CommandLine.Command(
     mixinStandardHelpOptions = true,
-    subcommands = {StdioDataCommand.class, RedisDataCommand.class, KuduMainCommand.class})
+    subcommands = {
+      StdioDataCommand.class,
+      RedisDataCommand.class,
+      KuduMainCommand.class,
+      DisplayConfigCommand.class
+    })
 public class EntryCommand {
 
   private boolean[] verbosity;

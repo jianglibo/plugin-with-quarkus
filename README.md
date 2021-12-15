@@ -7,6 +7,12 @@
 
 [https://github.com/jianglibo/plugin-with-quarkus/releases](https://github.com/jianglibo/plugin-with-quarkus/releases)
 
+## Override configuration value.
+
+java -D"kudu.master=192.168.0.22:7051" -jar .\build\plugin-with-quarkus-0.1.3-SNAPSHOT-runner.jar kudu record-count --table-name abc -v
+
+or .env in the working directory.
+
 
 ## Build and run
 

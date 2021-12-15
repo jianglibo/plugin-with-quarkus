@@ -37,3 +37,4 @@ nb-configuration.xml
 
 /jsonschema2pojo-1.1.1
 to-plugin.json
+/.env
