@@ -19,7 +19,7 @@ Copy-Item .\build\plugin-with-quarkus-0.1.2-SNAPSHOT-runner.jar ..\focus_dcs\dcs
 ```
 
 ```powershell
-java -jar .\build\plugin-with-quarkus-1.0.0-SNAPSHOT-runner.jar 
+java -jar .\build\plugin-with-quarkus-0.1.2-runner.jar 
 ```
 
 ```bash
