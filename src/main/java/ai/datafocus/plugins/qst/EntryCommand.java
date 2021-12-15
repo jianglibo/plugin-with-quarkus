@@ -1,7 +1,7 @@
 package ai.datafocus.plugins.qst;
 
 import ai.datafocus.plugins.qst.commands.DisplayConfigCommand;
-import ai.datafocus.plugins.qst.commands.KuduCommand.KuduMainCommand;
+import ai.datafocus.plugins.qst.commands.KuduCommand.KuduTableCommand;
 import ai.datafocus.plugins.qst.commands.RedisDataCommand;
 import ai.datafocus.plugins.qst.commands.StdioDataCommand;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
@@ -17,7 +17,7 @@ import picocli.CommandLine.ScopeType;
     subcommands = {
       StdioDataCommand.class,
       RedisDataCommand.class,
-      KuduMainCommand.class,
+      KuduTableCommand.class,
       DisplayConfigCommand.class
     })
 public class EntryCommand {
@@ -25,7 +25,7 @@ public class EntryCommand {
   private boolean[] verbosity;
 
   public int verbosity() {
-    return verbosity.length;
+    return verbosity == null ? 0 : verbosity.length;
   }
 
   @Option(
