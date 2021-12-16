@@ -10,7 +10,7 @@ public class DisplayConfigCommand {
 
   @Inject
   @ConfigProperty(name = "kudu.master")
-  private String kuduMaster;
+  String kuduMaster;
 
   @Command
   void kudu() {

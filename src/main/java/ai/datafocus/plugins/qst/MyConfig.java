@@ -6,17 +6,13 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import ai.datafocus.plugins.qst.dto.DcsPlugin;
 import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
 import ai.datafocus.plugins.qst.dto.MockState;
-import ai.datafocus.plugins.qst.dto.OutputType;
 import lombok.Getter;
 
 @Singleton
@@ -42,10 +38,4 @@ public class MyConfig {
 
   @Getter
   private String separator;
-
-  @Inject
-  ObjectMapper mapper;
-
-
-
 }

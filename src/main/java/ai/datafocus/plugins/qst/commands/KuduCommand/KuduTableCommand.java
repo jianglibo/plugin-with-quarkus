@@ -1,4 +1,4 @@
-package ai.datafocus.plugins.qst.commands.KuduCommand;
+package ai.datafocus.plugins.qst.commands.kuducommand;
 
 import ai.datafocus.plugins.qst.EntryCommand;
 import ai.datafocus.plugins.qst.util.KuduClientUtil;

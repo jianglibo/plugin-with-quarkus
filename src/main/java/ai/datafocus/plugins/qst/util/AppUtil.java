@@ -1,18 +1,22 @@
 package ai.datafocus.plugins.qst.util;
 
-import ai.datafocus.plugins.qst.dto.MockRow;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+
+import ai.datafocus.plugins.qst.dto.MockRow;
 
 @Singleton
 public class AppUtil {
 
-  @Inject ObjectMapper mapper;
+  @Inject ObjectMapper jsonMapper;
 
   public void printOutDataString(String data, String separator) {
     System.out.println();
@@ -24,7 +28,7 @@ public class AppUtil {
 
   public void printOutDataJson(Object data, String separator) throws JsonProcessingException {
     printOutDataString(
-        mapper.enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(data), separator);
+        jsonMapper.enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(data), separator);
   }
 
   public static String randomString(int targetStringLength) {
@@ -45,5 +49,9 @@ public class AppUtil {
         .age(ThreadLocalRandom.current().nextInt(120))
         .name(AppUtil.randomString(nameLength))
         .build();
+  }
+
+  public static void prn(String tpl, Object o) {
+    System.out.println(String.format(tpl, o));
   }
 }

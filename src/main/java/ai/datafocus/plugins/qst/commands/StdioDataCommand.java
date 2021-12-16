@@ -1,5 +1,15 @@
 package ai.datafocus.plugins.qst.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ai.datafocus.plugins.qst.EntryCommand;
 import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
 import ai.datafocus.plugins.qst.dto.MockOutOfPlugin;
@@ -8,12 +18,6 @@ import ai.datafocus.plugins.qst.dto.MockState;
 import ai.datafocus.plugins.qst.dto.OutputType;
 import ai.datafocus.plugins.qst.dto.ToPluginStdio;
 import ai.datafocus.plugins.qst.util.AppUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.List;
-import javax.inject.Inject;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
@@ -22,7 +26,7 @@ import picocli.CommandLine.ParentCommand;
 @Command(name = "stdio", mixinStandardHelpOptions = true)
 public class StdioDataCommand implements Runnable {
 
-  @Inject ObjectMapper mapper;
+  @Inject ObjectMapper jsonMapper;
   @Inject AppUtil appUtil;
 
   @ParentCommand EntryCommand parent;
@@ -80,7 +84,7 @@ public class StdioDataCommand implements Runnable {
       throws JsonMappingException, JsonProcessingException {
 
     ToPluginStdio toPlugin =
-        mapper.readValue(parent.getMyconfig().getToPluginStr().orElse("{}"), ToPluginStdio.class);
+        jsonMapper.readValue(parent.getMyconfig().getToPluginStr().orElse("{}"), ToPluginStdio.class);
 
     OutputType output_to = toPlugin.getOutput_to();
 

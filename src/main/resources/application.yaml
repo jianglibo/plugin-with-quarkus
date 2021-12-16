@@ -1,9 +1,15 @@
 IN_RESOURCE_APPLICATION_KEY: IN_RESOURCE_APPLICATION_VALUE
 # jushuitan-api/mp-rest/url=https://open.erp321.com
-jushuitan-api:
-  mp-rest:
-    url: https://c.jushuitan.com
-    scope: javax.inject.Singleton
+jushuitan-api/mp-rest/url: https://c.jushuitan.com
+jushuitan-api/mp-rest/scope: javax.inject.Singleton
+
+hasura-rest/mp-rest/url:  http://hasura
+hasura-rest/mp-rest/scope: javax.inject.Singleton
+
+hasura:
+  admin-secret: Eigh1diech0rohchoodai6Ohjah7uPei
+  fixture-dir: c:/Users/jiang/fdatacollect/dcs-plugin-server/fixtures/
+
 # SendToPlugin type in the dcs-plugin-server project.
 DCS_TO_PLUGIN: >
   {
@@ -37,6 +43,10 @@ quarkus:
     additional-build-args:
       - --trace-class-initialization=io.netty.resolver.dns.DnsNameResolver,io.netty.resolver.HostsFileEntriesResolver,io.netty.resolver.dns.DnsServerAddressStreamProviders$DefaultProviderHolder
       - --initialize-at-build-time=io.netty.resolver.dns.DnsServerAddressStreamProviders$DefaultProviderHolder,io.netty.resolver.dns.DnsNameResolver,io.netty.resolver.HostsFileEntriesResolver
+    # extensions-api:
+    #   hostname-verifier: io.quarkus.restclient.NoopHostnameVerifier
+  tls:
+    trust-all: true
 kudu:
   master: 161.189.46.49:7051
   
