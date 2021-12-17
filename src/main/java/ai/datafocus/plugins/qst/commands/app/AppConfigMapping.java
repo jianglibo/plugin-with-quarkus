@@ -13,6 +13,8 @@ public interface AppConfigMapping {
   }
 
   interface AppDescription {
+    String sshConnectStr();
+
     AppName appName();
 
     Path projectRoot();

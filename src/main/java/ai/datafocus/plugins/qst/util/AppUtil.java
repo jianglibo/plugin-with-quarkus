@@ -6,10 +6,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -75,5 +78,18 @@ public class AppUtil {
         .commandLines(lines)
         .build()
         .play();
+  }
+
+  public static Path findNewestVersionJar(Path dir) throws IOException {
+    List<Path> jars =
+        Files.list(dir)
+            .filter(p -> p.getFileName().toString().toLowerCase().endsWith(".jar"))
+            .collect(Collectors.toList());
+    Collections.sort(jars);
+    Collections.reverse(jars);
+    if (jars.size() == 0) {
+      throw new RuntimeException("no jars found in the: " + dir);
+    }
+    return jars.get(0);
   }
 }
