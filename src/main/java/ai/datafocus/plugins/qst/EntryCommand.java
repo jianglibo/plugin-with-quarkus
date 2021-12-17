@@ -17,6 +17,7 @@ import ai.datafocus.plugins.qst.commands.pluginserver.PluginServerCommand;
 import io.quarkus.logging.Log;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
 import lombok.Getter;
+import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ScopeType;
@@ -30,6 +31,7 @@ import picocli.CommandLine.ScopeType;
       KuduTableCommand.class,
       DisplayConfigCommand.class,
       HasuraCommand.class,
+      GenerateCompletion.class,
       PluginServerCommand.class
     })
 public class EntryCommand {
