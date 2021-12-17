@@ -80,3 +80,18 @@ The output:
 * git tag --delete v0.1.
 * git push --delete origin v0.1.
 * gh release delete v0.1.
+
+## autocompletion
+
+```bash
+#!/usr/bin/env bash
+java -jar plugin-with-quarkus-0.1.3-SNAPSHOT-runner.jar $@
+
+```
+source <(p generate-completion)
+
+```bash
+java -cp ./build/plugin-with-quarkus-0.1.3-SNAPSHOT-runner.jar picocli.AutoComplete -n p ai.datafocus.plugins.qst.EntryCommand
+
+mv p_completion /etc/bash_completion.d/
+```

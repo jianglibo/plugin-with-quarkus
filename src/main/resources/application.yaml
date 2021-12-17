@@ -59,3 +59,13 @@ quarkus:
 kudu:
   master: 161.189.46.49:7051
   
+apps:
+  all:
+  - app-name: DCS_PLUGIN_SERVER
+    project-root: C:/Users/jiang/fdatacollect/
+    git-url: https://github.com/openscanner/fdatacollect
+    build-command:
+    - gradlew.bat
+    - build
+    - -x
+    - test

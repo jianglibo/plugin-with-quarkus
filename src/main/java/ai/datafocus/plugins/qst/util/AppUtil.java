@@ -1,17 +1,17 @@
 package ai.datafocus.plugins.qst.util;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
+import ai.datafocus.plugins.qst.commands.app.AppConfigMapping.AppDescription;
+import ai.datafocus.plugins.qst.dto.MockRow;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
-import ai.datafocus.plugins.qst.dto.MockRow;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Singleton
 public class AppUtil {
@@ -53,5 +53,27 @@ public class AppUtil {
 
   public static void prn(String tpl, Object o) {
     System.out.println(String.format(tpl, o));
+  }
+
+  public static int gitPull(AppDescription description) throws InterruptedException, IOException {
+    return CommonCommand.builder()
+        .exec("git")
+        .workingDirectory(description.projectRoot().toAbsolutePath().normalize())
+        .commandLine("pull")
+        .build()
+        .play();
+  }
+
+  public static int gradleBuild(AppDescription description)
+      throws InterruptedException, IOException {
+    Path cur = description.projectRoot().toAbsolutePath().normalize();
+    String cmd = cur.resolve(description.buildCommand().get(0)).toAbsolutePath().toString();
+    List<String> lines = description.buildCommand().subList(1, description.buildCommand().size());
+    return CommonCommand.builder()
+        .exec(cmd)
+        .workingDirectory(cur)
+        .commandLines(lines)
+        .build()
+        .play();
   }
 }

@@ -11,13 +11,13 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import ai.datafocus.plugins.qst.commands.DisplayConfigCommand;
 import ai.datafocus.plugins.qst.commands.RedisDataCommand;
 import ai.datafocus.plugins.qst.commands.StdioDataCommand;
+import ai.datafocus.plugins.qst.commands.app.AppCommand;
 import ai.datafocus.plugins.qst.commands.hasura.HasuraCommand;
 import ai.datafocus.plugins.qst.commands.kuducommand.KuduTableCommand;
 import ai.datafocus.plugins.qst.commands.pluginserver.PluginServerCommand;
 import io.quarkus.logging.Log;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
 import lombok.Getter;
-import picocli.AutoComplete.GenerateCompletion;
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ScopeType;
@@ -31,7 +31,7 @@ import picocli.CommandLine.ScopeType;
       KuduTableCommand.class,
       DisplayConfigCommand.class,
       HasuraCommand.class,
-      GenerateCompletion.class,
+      AppCommand.class,
       PluginServerCommand.class
     })
 public class EntryCommand {
