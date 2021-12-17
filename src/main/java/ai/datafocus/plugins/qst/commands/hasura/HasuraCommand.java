@@ -199,7 +199,7 @@ public class HasuraCommand {
   }
 
   @Command(name = "instance-list")
-  void instancePlugin(
+  void listInstance(
       @CommandLine.Option(
               names = "--offset",
               required = false,
@@ -312,4 +312,38 @@ public class HasuraCommand {
       response.dumpData();
     }
   }
+
+  @Command(name = "error-list")
+  void listError(
+      @CommandLine.Option(
+              names = "--offset",
+              required = false,
+              description = "The the start of the list")
+          Integer offset,
+      @CommandLine.Option(
+              names = "--limit",
+              required = false,
+              description = "the limit of return records.")
+          Integer limit
+          )
+      throws IOException {
+    String fromFile =
+        Files.readString(fixtureDir.resolve("error-list.yaml").toAbsolutePath().normalize());
+    Map<String, Object> jbody =
+        yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
+    if (offset != null) {
+      hasuraUtil.alterValueAt(jbody, offset, "variables", "offset");
+    }
+    if (limit != null) {
+      hasuraUtil.alterValueAt(jbody, limit, "variables", "limit");
+    }
+    String body = jsonMapper.writeValueAsString(jbody);
+    HasuraResponse response = service.doGraphql(body);
+    if (response.hasError()) {
+      response.dumpErrors();
+    } else {
+      response.dumpData();
+    }
+  }
+
 }
