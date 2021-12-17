@@ -1,18 +1,22 @@
 package ai.datafocus.plugins.qst;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import ai.datafocus.plugins.qst.commands.DisplayConfigCommand;
 import ai.datafocus.plugins.qst.commands.RedisDataCommand;
 import ai.datafocus.plugins.qst.commands.StdioDataCommand;
 import ai.datafocus.plugins.qst.commands.hasura.HasuraCommand;
 import ai.datafocus.plugins.qst.commands.kuducommand.KuduTableCommand;
+import ai.datafocus.plugins.qst.commands.pluginserver.PluginServerCommand;
 import io.quarkus.logging.Log;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import lombok.Getter;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.ScopeType;
@@ -25,7 +29,8 @@ import picocli.CommandLine.ScopeType;
       RedisDataCommand.class,
       KuduTableCommand.class,
       DisplayConfigCommand.class,
-      HasuraCommand.class
+      HasuraCommand.class,
+      PluginServerCommand.class
     })
 public class EntryCommand {
 

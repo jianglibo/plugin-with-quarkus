@@ -14,6 +14,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-picocli'
     implementation 'io.quarkus:quarkus-arc'
     implementation 'io.quarkus:quarkus-rest-client-jackson'
+    implementation 'io.quarkus:quarkus-resteasy-multipart'
     implementation 'io.quarkus:quarkus-config-yaml'
     implementation 'io.lettuce:lettuce-core:6.1.5.RELEASE'
     implementation 'org.redisson:redisson:3.16.3'  

@@ -6,6 +6,8 @@ jushuitan-api/mp-rest/scope: javax.inject.Singleton
 hasura-rest/mp-rest/url:  http://hasura
 hasura-rest/mp-rest/scope: javax.inject.Singleton
 
+upload/mp-rest/url:  http://localhost:8080/
+
 hasura:
   admin-secret: Eigh1diech0rohchoodai6Ohjah7uPei
   fixture-dir: c:/Users/jiang/fdatacollect/dcs-plugin-server/fixtures/
@@ -19,6 +21,12 @@ DCS_TO_PLUGIN: >
   }
 # https://blog.rpuch.com/2020/09/23/compiling-netty-enabled-application-with-dns-support-to-native-image-in-2020.html
 quarkus:
+  http:
+    port: 8081
+  rest-client:
+    ai.datafocus.plugins.qst.service.url: http://localhost:8080/
+    upload:
+      url: http://localhost:8080/
   index-dependency:
   -  name:
      group-id: com.fasterxml.jackson.core
@@ -34,9 +42,10 @@ quarkus:
     classifer:
   package:
     type: uber-jar
-  # log:
-  #   level: ERROR
-    # category:
+  log:
+    level: DEBUG
+    category:
+      org.jboss.resteasy.microprofile.client: DEBUG
     #   io.qua.config:
     #     level: ERROR
   native:
