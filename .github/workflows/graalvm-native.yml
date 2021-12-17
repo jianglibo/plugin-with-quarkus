@@ -4,11 +4,11 @@
 name: Build GraalVM native
 
 on:
-  # release:
-  #   types: [created]
+  release:
+    types: [created]
     # Draft a new release
-  push:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
 #   pull_request:
 #     branches: [ main ]
 

@@ -1,20 +1,24 @@
 package ai.datafocus.plugins.qst.commands.hasura;
 
-import ai.datafocus.plugins.qst.CommonTypeReferences;
-import ai.datafocus.plugins.qst.MyYAMLMapper;
-import ai.datafocus.plugins.qst.dto.HasuraResponse;
-import ai.datafocus.plugins.qst.service.HasuraService;
-import ai.datafocus.plugins.qst.util.HasuraUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+
 import javax.inject.Inject;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+import ai.datafocus.plugins.qst.CommonTypeReferences;
+import ai.datafocus.plugins.qst.MyYAMLMapper;
+import ai.datafocus.plugins.qst.dto.HasuraResponse;
+import ai.datafocus.plugins.qst.service.HasuraService;
+import ai.datafocus.plugins.qst.util.HasuraUtil;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -258,6 +262,47 @@ public class HasuraCommand {
       HasuraResponse response = createAuthor(UUID.randomUUID().toString());
       int newAuthorId = (int) response.oneResponse().get("id");
       alt.accept(newAuthorId);
+    }
+    String body = jsonMapper.writeValueAsString(jbody);
+    HasuraResponse response = service.doGraphql(body);
+    if (response.hasError()) {
+      response.dumpErrors();
+    } else {
+      response.dumpData();
+    }
+  }
+
+  @Command(name = "instance-update")
+  void updateInstance(
+      @CommandLine.Option(
+              names = "--yaml-file",
+              required = false,
+              description = "The the plugin update file.")
+          String yamlFile,
+      @CommandLine.Option(names = "--id", required = true, description = "The id of the plugin.")
+          Integer id,
+      @CommandLine.Option(names = "--name", required = false, description = "The name to update.")
+          String name,
+      @CommandLine.Option(
+              names = "--table-name",
+              required = false,
+              description = "The table_name to update.")
+          String tableName)
+      throws IOException {
+    String fromFile =
+        Files.readString(
+            fixtureDir
+                .resolve(yamlFile == null ? "instance-update.yml" : yamlFile)
+                .toAbsolutePath()
+                .normalize());
+    Map<String, Object> jbody =
+        yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
+    hasuraUtil.alterValueAt(jbody, id, "variables", "id");
+    if (name != null) {
+      hasuraUtil.alterValueAt(jbody, name, "variables", "object", "name");
+    }
+    if (tableName != null) {
+      hasuraUtil.alterValueAt(jbody, tableName, "variables", "object", "table_name");
     }
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
