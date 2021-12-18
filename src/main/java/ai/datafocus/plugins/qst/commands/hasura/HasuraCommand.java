@@ -53,11 +53,7 @@ public class HasuraCommand {
     hasuraUtil.alterValueAt(jbody, name, "variables", "object", "name");
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
-    if (response.hasError()) {
-      response.dumpErrors();
-    } else {
-      response.dumpData();
-    }
+    dumpHasuraResponse(response);
     return response;
   }
 
@@ -77,11 +73,7 @@ public class HasuraCommand {
     hasuraUtil.alterValueAt(jbody, name, "variables", "name");
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
-    if (response.hasError()) {
-      response.dumpErrors();
-    } else {
-      response.dumpData();
-    }
+    dumpHasuraResponse(response);
   }
 
   @Command(name = "plugin-create")
@@ -112,11 +104,7 @@ public class HasuraCommand {
     }
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
-    if (response.hasError()) {
-      response.dumpErrors();
-    } else {
-      response.dumpData();
-    }
+    dumpHasuraResponse(response);
   }
 
   @Command(name = "plugin-update")
@@ -178,11 +166,7 @@ public class HasuraCommand {
 
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
-    if (response.hasError()) {
-      response.dumpErrors();
-    } else {
-      response.dumpData();
-    }
+    dumpHasuraResponse(response);
   }
 
   @SuppressWarnings("unchecked")
@@ -236,11 +220,7 @@ public class HasuraCommand {
     }
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
-    if (response.hasError()) {
-      response.dumpErrors();
-    } else {
-      response.dumpData();
-    }
+    dumpHasuraResponse(response);
   }
 
   @Command(name = "instance-list")
@@ -275,11 +255,7 @@ public class HasuraCommand {
     }
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
-    if (response.hasError()) {
-      response.dumpErrors();
-    } else {
-      response.dumpData();
-    }
+    dumpHasuraResponse(response);
   }
 
   @Command(name = "instance-create")
@@ -312,7 +288,24 @@ public class HasuraCommand {
       alt.accept(newAuthorId);
     }
     String body = jsonMapper.writeValueAsString(jbody);
-    HasuraResponse response = service.doGraphql(body);
+    dumpHasuraResponse(service.doGraphql(body));
+  }
+
+  @Command(name = "instance-touch")
+  void touchInstance(
+      @CommandLine.Option(names = "--id", required = true, description = "The id of the plugin.")
+          Integer id)
+      throws IOException {
+    String fromFile =
+        Files.readString(fixtureDir.resolve("instance-touch.yml").toAbsolutePath().normalize());
+    Map<String, Object> jbody =
+        yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
+    hasuraUtil.alterValueAt(jbody, id, "variables", "id");
+    String body = jsonMapper.writeValueAsString(jbody);
+    dumpHasuraResponse(service.doGraphql(body));
+  }
+
+  private void dumpHasuraResponse(HasuraResponse response) {
     if (response.hasError()) {
       response.dumpErrors();
     } else {
@@ -363,11 +356,7 @@ public class HasuraCommand {
     }
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
-    if (response.hasError()) {
-      response.dumpErrors();
-    } else {
-      response.dumpData();
-    }
+    dumpHasuraResponse(response);
   }
 
   @Command(name = "error-list")
