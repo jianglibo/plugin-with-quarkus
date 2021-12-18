@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -133,7 +134,14 @@ public class HasuraCommand {
               names = "--executable-tpl",
               required = false,
               description = "The executable_tpl to update.")
-          String executableTpl)
+          String executableTpl,
+      @CommandLine.Option(
+              names = "--env",
+              required = false,
+              description =
+                  "env pairs to update. to add by adding plus prefix +quarkus.log.level=WARN, to"
+                      + " delete by adding minus prefix -quarkus.log.level=WARN")
+          List<String> envs)
       throws IOException {
     String fromFile =
         Files.readString(
@@ -150,6 +158,24 @@ public class HasuraCommand {
     if (executableTpl != null) {
       hasuraUtil.alterValueAt(jbody, executableTpl, "variables", "object", "executable_tpl");
     }
+
+    if (envs != null && envs.size() > 0) {
+      Map<String, Object> originEnvs = getStringObjectMap(pluginByPk(id), "envs");
+      for (String oneEnv : envs) {
+        if (oneEnv.startsWith("-")) {
+          String[] ss = oneEnv.substring(1).split("=", 2);
+          originEnvs.remove(ss[0]);
+        } else {
+          if (oneEnv.startsWith("+")) {
+            oneEnv = oneEnv.substring(1);
+          }
+          String[] ss = oneEnv.split("=", 2);
+          originEnvs.put(ss[0], ss[1]);
+        }
+      }
+      hasuraUtil.alterValueAt(jbody, originEnvs, "variables", "object", "envs");
+    }
+
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
     if (response.hasError()) {
@@ -157,6 +183,22 @@ public class HasuraCommand {
     } else {
       response.dumpData();
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, Object> getStringObjectMap(Map<String, Object> parent, String key) {
+    return (Map<String, Object>) parent.get(key);
+  }
+
+  private Map<String, Object> pluginByPk(Integer id) throws IOException {
+    String fromFile =
+        Files.readString(fixtureDir.resolve("plugin-by-pk.yml").toAbsolutePath().normalize());
+    Map<String, Object> jbody =
+        yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
+    hasuraUtil.alterValueAt(jbody, id, "variables", "id");
+    String body = jsonMapper.writeValueAsString(jbody);
+    HasuraResponse response = service.doGraphql(body);
+    return response.oneResponse();
   }
 
   @Command(name = "plugin-list")
@@ -357,7 +399,8 @@ public class HasuraCommand {
       response.dumpErrors();
     } else {
       String sep =
-          "\n---------------------------------------------ERROR-ITEM-----------------------------------------------\n";
+          "\n"
+              + "---------------------------------------------ERROR-ITEM-----------------------------------------------\n";
       for (Map<String, Object> item : response.listResponse()) {
         System.out.println(sep);
         System.out.println(item);
