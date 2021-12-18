@@ -23,10 +23,9 @@ DCS_TO_PLUGIN: >
 quarkus:
   http:
     port: 8081
-  rest-client:
-    ai.datafocus.plugins.qst.service.url: http://localhost:8080/
-    upload:
-      url: http://localhost:8080/
+  # rest-client:
+  #   upload:
+  #     url: http://localhost:8080/
   index-dependency:
   -  name:
      group-id: com.fasterxml.jackson.core

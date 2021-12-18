@@ -3,3 +3,4 @@ quarkus.log.level=WARN
 quarkus.log.console.color=true
 hasura.fixture-dir=fdatacollect/dcs-plugin-server/fixtures/
 hasura-rest/mp-rest/url=http://hasura
+upload/mp-rest/url:  http://localhost:8080/

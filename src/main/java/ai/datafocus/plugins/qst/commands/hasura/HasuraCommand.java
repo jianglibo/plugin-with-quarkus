@@ -356,7 +356,13 @@ public class HasuraCommand {
     if (response.hasError()) {
       response.dumpErrors();
     } else {
-      response.dumpData();
+      String sep =
+          "\n---------------------------------------------ERROR-ITEM-----------------------------------------------\n";
+      for (Map<String, Object> item : response.listResponse()) {
+        System.out.println(sep);
+        System.out.println(item);
+      }
+      System.out.println(sep);
     }
   }
 }
