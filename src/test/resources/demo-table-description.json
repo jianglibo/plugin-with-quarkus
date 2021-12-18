@@ -1,0 +1,21 @@
+{
+  "table_description": {
+    "columns": [
+      {
+        "name": "kudu_id",
+        "type": "int",
+        "key": true
+      },
+      {
+        "name": "kudu_name",
+        "type": "string",
+        "key": false
+      },
+      {
+        "name": "kudu_age",
+        "type": "int",
+        "key": false
+      }
+    ]
+  }
+}

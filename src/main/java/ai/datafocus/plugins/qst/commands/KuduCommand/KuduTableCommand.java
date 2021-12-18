@@ -2,7 +2,6 @@ package ai.datafocus.plugins.qst.commands.kuducommand;
 
 import ai.datafocus.plugins.qst.EntryCommand;
 import ai.datafocus.plugins.qst.util.KuduClientUtil;
-import io.quarkus.logging.Log;
 import javax.inject.Inject;
 import org.apache.kudu.client.KuduClient;
 import org.apache.kudu.client.KuduException;
@@ -12,7 +11,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.ParentCommand;
 
 /** This command doesn't need to know the instanceId. */
-@Command(name = "kudu", mixinStandardHelpOptions = true)
+@Command(name = "kudu", mixinStandardHelpOptions = true, version = "1.0")
 public class KuduTableCommand {
 
   @ParentCommand EntryCommand parent;
@@ -22,9 +21,9 @@ public class KuduTableCommand {
   private String kuduMaster;
 
   public KuduClient kuduClient() {
-    if (parent.verbosity() > 0) {
-      Log.infof("kuduMaster: %s", kuduMaster);
-    }
+    // if (parent.verbosity() > 0) {
+    //   Log.infof("kuduMaster: %s", kuduMaster);
+    // }
     KuduClient kudu = new KuduClient.KuduClientBuilder(kuduMaster).build();
     return kudu;
   }

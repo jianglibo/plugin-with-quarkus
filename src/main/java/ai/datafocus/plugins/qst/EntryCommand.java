@@ -24,6 +24,7 @@ import picocli.CommandLine.ScopeType;
 
 @TopCommand
 @CommandLine.Command(
+    name = "p",
     mixinStandardHelpOptions = true,
     subcommands = {
       StdioDataCommand.class,
@@ -36,7 +37,7 @@ import picocli.CommandLine.ScopeType;
     })
 public class EntryCommand {
 
-  private boolean[] verbosity;
+  // private boolean[] verbosity;
 
   @Getter @Inject MyConfig myconfig;
 
@@ -44,20 +45,20 @@ public class EntryCommand {
   @ConfigProperty(name = "hasura.fixture-dir")
   Path fixtureDir;
 
-  public int verbosity() {
-    return verbosity == null ? 0 : verbosity.length;
-  }
+  // public int verbosity() {
+  //   return verbosity == null ? 0 : verbosity.length;
+  // }
 
-  @Option(
-      names = {"-v", "--verbose"},
-      scope = ScopeType.INHERIT,
-      description = {
-        "Specify multiple -v options to increase verbosity.",
-        "For example, `-v -v -v` or `-vvv`"
-      })
-  public void setVerbose(boolean[] verbosity) {
-    this.verbosity = verbosity;
-  }
+  // @Option(
+  //     names = {"-v", "--verbose"},
+  //     scope = ScopeType.INHERIT,
+  //     description = {
+  //       "Specify multiple -v options to increase verbosity.",
+  //       "For example, `-v -v -v` or `-vvv`"
+  //     })
+  // public void setVerbose(boolean[] verbosity) {
+  //   this.verbosity = verbosity;
+  // }
 
   @PostConstruct
   void after() {

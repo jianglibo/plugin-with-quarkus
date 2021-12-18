@@ -21,8 +21,9 @@ import ai.datafocus.plugins.qst.service.HasuraService;
 import ai.datafocus.plugins.qst.util.HasuraUtil;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.HelpCommand;
 
-@Command(name = "hasura", mixinStandardHelpOptions = true)
+@Command(name = "hasura", mixinStandardHelpOptions = true, subcommands = {HelpCommand.class})
 public class HasuraCommand {
 
   @Inject @RestClient HasuraService service;
@@ -87,8 +88,8 @@ public class HasuraCommand {
   void createPlugin(
       @CommandLine.Option(
               names = "--yaml-file",
-              required = true,
-              description = "The name of the author.")
+              defaultValue = "plugin-insert-demo.yml",
+              description = "The yaml file that describe the plugin to create. default:  ${DEFAULT-VALUE}.")
           String yamlFile,
       @CommandLine.Option(
               names = "--author-id",
