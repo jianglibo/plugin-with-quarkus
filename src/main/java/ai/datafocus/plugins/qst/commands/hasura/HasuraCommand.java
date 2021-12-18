@@ -12,7 +12,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -50,7 +49,7 @@ public class HasuraCommand {
         Files.readString(fixtureDir.resolve("author-insert.yml").toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    hasuraUtil.alterValueAt(jbody, name, "variables", "object", "name");
+    alterValueAtIfNotNull_variables_object(jbody, name, "name");
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
     dumpHasuraResponse(response);
@@ -70,7 +69,7 @@ public class HasuraCommand {
             fixtureDir.resolve("author-delete-byname.yml").toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    hasuraUtil.alterValueAt(jbody, name, "variables", "name");
+    alterValueAtIfNotNull_variables(jbody, name, "name");
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
     dumpHasuraResponse(response);
@@ -90,18 +89,33 @@ public class HasuraCommand {
               description =
                   "The id of the author. if you didn't provide this argument the application will"
                       + " create a random author.")
-          Integer authorId)
+          Integer authorId,
+      @CommandLine.Option(names = "--name", required = false, description = "The name to update.")
+          String name,
+      @CommandLine.Option(
+              names = "--executable-tpl",
+              required = false,
+              description = "The executable_tpl to update.")
+          String executableTpl,
+      @CommandLine.Option(
+              names = "--output-to",
+              required = false,
+              description = "The communication method between the plugin and the server.")
+          OutputTo outputTo)
       throws IOException {
     String fromFile = Files.readString(fixtureDir.resolve(yamlFile).toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
     if (authorId != null) {
-      hasuraUtil.alterValueAt(jbody, authorId, "variables", "object", "author_id");
+      alterValueAtIfNotNull_variables_object(jbody, authorId, "author_id");
     } else {
       HasuraResponse response = createAuthor(UUID.randomUUID().toString());
       int newAuthorId = (int) response.oneResponse().get("id");
-      hasuraUtil.alterValueAt(jbody, newAuthorId, "variables", "object", "author_id");
+      alterValueAtIfNotNull_variables_object(jbody, newAuthorId, "author_id");
     }
+    alterValueAtIfNotNull_variables_object(jbody, name, "name");
+    alterValueAtIfNotNull_variables_object(jbody, executableTpl, "executable_tpl");
+    alterValueAtIfNotNull_variables_object(jbody, outputTo, "output_to");
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
     dumpHasuraResponse(response);
@@ -124,6 +138,11 @@ public class HasuraCommand {
               description = "The executable_tpl to update.")
           String executableTpl,
       @CommandLine.Option(
+              names = "--output-to",
+              required = false,
+              description = "The communication method between the plugin and the server.")
+          OutputTo outputTo,
+      @CommandLine.Option(
               names = "--env",
               required = false,
               description =
@@ -139,13 +158,10 @@ public class HasuraCommand {
                 .normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    hasuraUtil.alterValueAt(jbody, id, "variables", "id");
-    if (name != null) {
-      hasuraUtil.alterValueAt(jbody, name, "variables", "object", "name");
-    }
-    if (executableTpl != null) {
-      hasuraUtil.alterValueAt(jbody, executableTpl, "variables", "object", "executable_tpl");
-    }
+    alterValueAtIfNotNull_variables(jbody, id, "id");
+    alterValueAtIfNotNull_variables_object(jbody, name, "name");
+    alterValueAtIfNotNull_variables_object(jbody, executableTpl, "executable_tpl");
+    alterValueAtIfNotNull_variables_object(jbody, outputTo, "output_to");
 
     if (envs != null && envs.size() > 0) {
       Map<String, Object> originEnvs = getStringObjectMap(pluginByPk(id), "envs");
@@ -161,7 +177,7 @@ public class HasuraCommand {
           originEnvs.put(ss[0], ss[1]);
         }
       }
-      hasuraUtil.alterValueAt(jbody, originEnvs, "variables", "object", "envs");
+      alterValueAtIfNotNull_variables_object(jbody, originEnvs, "envs");
     }
 
     String body = jsonMapper.writeValueAsString(jbody);
@@ -179,7 +195,7 @@ public class HasuraCommand {
         Files.readString(fixtureDir.resolve("plugin-by-pk.yml").toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    hasuraUtil.alterValueAt(jbody, id, "variables", "id");
+    alterValueAtIfNotNull_variables(jbody, id, "id");
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
     return response.oneResponse();
@@ -212,12 +228,9 @@ public class HasuraCommand {
                 .normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    if (offset != null) {
-      hasuraUtil.alterValueAt(jbody, offset, "variables", "offset");
-    }
-    if (limit != null) {
-      hasuraUtil.alterValueAt(jbody, limit, "variables", "limit");
-    }
+
+    alterValueAtIfNotNull_variables(jbody, offset, "offset");
+    alterValueAtIfNotNull_variables(jbody, limit, "limit");
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
     dumpHasuraResponse(response);
@@ -245,14 +258,9 @@ public class HasuraCommand {
         Files.readString(fixtureDir.resolve("instance-list.yml").toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-
-    hasuraUtil.alterValueAt(jbody, pluginId, "variables", "plugin_id");
-    if (offset != null) {
-      hasuraUtil.alterValueAt(jbody, offset, "variables", "offset");
-    }
-    if (limit != null) {
-      hasuraUtil.alterValueAt(jbody, limit, "variables", "limit");
-    }
+    alterValueAtIfNotNull_variables(jbody, pluginId, "plugin_id");
+    alterValueAtIfNotNull_variables(jbody, offset, "offset");
+    alterValueAtIfNotNull_variables(jbody, limit, "limit");
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
     dumpHasuraResponse(response);
@@ -268,7 +276,7 @@ public class HasuraCommand {
           String yamlFile,
       @CommandLine.Option(
               names = "--plugin-id",
-              required = false,
+              required = true,
               description =
                   "The id of the plugin. If you didn't provide a plugin-id the application will"
                       + " create a random plugin. ")
@@ -277,16 +285,7 @@ public class HasuraCommand {
     String fromFile = Files.readString(fixtureDir.resolve(yamlFile).toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    Consumer<Integer> alt =
-        (pid) -> hasuraUtil.alterValueAt(jbody, pid, "variables", "object", "dcs_plugin_id");
-    ;
-    if (pluginId != null) {
-      alt.accept(pluginId);
-    } else {
-      HasuraResponse response = createAuthor(UUID.randomUUID().toString());
-      int newAuthorId = (int) response.oneResponse().get("id");
-      alt.accept(newAuthorId);
-    }
+    alterValueAtIfNotNull_variables_object(jbody, pluginId, "dcs_plugin_id");
     String body = jsonMapper.writeValueAsString(jbody);
     dumpHasuraResponse(service.doGraphql(body));
   }
@@ -300,7 +299,7 @@ public class HasuraCommand {
         Files.readString(fixtureDir.resolve("instance-touch.yml").toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    hasuraUtil.alterValueAt(jbody, id, "variables", "id");
+    alterValueAtIfNotNull_variables(jbody, id, "id");
     String body = jsonMapper.writeValueAsString(jbody);
     dumpHasuraResponse(service.doGraphql(body));
   }
@@ -340,18 +339,14 @@ public class HasuraCommand {
                 .normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    hasuraUtil.alterValueAt(jbody, id, "variables", "id");
-    if (name != null) {
-      hasuraUtil.alterValueAt(jbody, name, "variables", "object", "name");
-    }
-    if (tableName != null) {
-      hasuraUtil.alterValueAt(jbody, tableName, "variables", "object", "table_name");
-    }
+    alterValueAtIfNotNull_variables(jbody, id, "id");
+    alterValueAtIfNotNull_variables_object(jbody, name, "name");
+    alterValueAtIfNotNull_variables_object(jbody, tableName, "table_name");
     if (cron != null) {
       if ("null".equalsIgnoreCase(cron)) {
         hasuraUtil.alterValueAt(jbody, null, "variables", "object", "cron");
       } else {
-        hasuraUtil.alterValueAt(jbody, cron, "variables", "object", "cron");
+        alterValueAtIfNotNull_variables_object(jbody, cron, "cron");
       }
     }
     String body = jsonMapper.writeValueAsString(jbody);
@@ -376,12 +371,10 @@ public class HasuraCommand {
         Files.readString(fixtureDir.resolve("error-list.yaml").toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
-    if (offset != null) {
-      hasuraUtil.alterValueAt(jbody, offset, "variables", "offset");
-    }
-    if (limit != null) {
-      hasuraUtil.alterValueAt(jbody, limit, "variables", "limit");
-    }
+
+    alterValueAtIfNotNull_variables(jbody, offset, "offset");
+    alterValueAtIfNotNull_variables(jbody, limit, "limit");
+
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
     if (response.hasError()) {
@@ -396,5 +389,24 @@ public class HasuraCommand {
       }
       System.out.println(sep);
     }
+  }
+
+  private void alterValueAtIfNotNull_variables_object(
+      Map<String, Object> jbody, Object newValue, String fieldName) {
+    if (newValue != null) {
+      hasuraUtil.alterValueAt(jbody, newValue, "variables", "object", fieldName);
+    }
+  }
+
+  private void alterValueAtIfNotNull_variables(
+      Map<String, Object> jbody, Object newValue, String fieldName) {
+    if (newValue != null) {
+      hasuraUtil.alterValueAt(jbody, newValue, "variables", fieldName);
+    }
+  }
+
+  public static enum OutputTo {
+    STDIO,
+    REDIS
   }
 }
