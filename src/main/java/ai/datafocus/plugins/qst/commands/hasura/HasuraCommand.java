@@ -1,29 +1,28 @@
 package ai.datafocus.plugins.qst.commands.hasura;
 
+import ai.datafocus.plugins.qst.CommonTypeReferences;
+import ai.datafocus.plugins.qst.MyYAMLMapper;
+import ai.datafocus.plugins.qst.dto.HasuraResponse;
+import ai.datafocus.plugins.qst.service.HasuraService;
+import ai.datafocus.plugins.qst.util.HasuraUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
-
 import javax.inject.Inject;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-
-import ai.datafocus.plugins.qst.CommonTypeReferences;
-import ai.datafocus.plugins.qst.MyYAMLMapper;
-import ai.datafocus.plugins.qst.dto.HasuraResponse;
-import ai.datafocus.plugins.qst.service.HasuraService;
-import ai.datafocus.plugins.qst.util.HasuraUtil;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;
 
-@Command(name = "hasura", mixinStandardHelpOptions = true, subcommands = {HelpCommand.class})
+@Command(
+    name = "hasura",
+    mixinStandardHelpOptions = true,
+    subcommands = {HelpCommand.class})
 public class HasuraCommand {
 
   @Inject @RestClient HasuraService service;
@@ -89,12 +88,15 @@ public class HasuraCommand {
       @CommandLine.Option(
               names = "--yaml-file",
               defaultValue = "plugin-insert-demo.yml",
-              description = "The yaml file that describe the plugin to create. default:  ${DEFAULT-VALUE}.")
+              description =
+                  "The yaml file that describe the plugin to create. default:  ${DEFAULT-VALUE}.")
           String yamlFile,
       @CommandLine.Option(
               names = "--author-id",
               required = false,
-              description = "The id of the author.")
+              description =
+                  "The id of the author. if you didn't provide this argument the application will"
+                      + " create a random author.")
           Integer authorId)
       throws IOException {
     String fromFile = Files.readString(fixtureDir.resolve(yamlFile).toAbsolutePath().normalize());
@@ -243,12 +245,15 @@ public class HasuraCommand {
       @CommandLine.Option(
               names = "--yaml-file",
               defaultValue = "instance-insert-demo.yml",
-              description = "The yaml file that describe the instance to create. default:  ${DEFAULT-VALUE}.")
+              description =
+                  "The yaml file that describe the instance to create. default:  ${DEFAULT-VALUE}.")
           String yamlFile,
       @CommandLine.Option(
               names = "--plugin-id",
               required = false,
-              description = "The id of the plugin.")
+              description =
+                  "The id of the plugin. If you didn't provide a plugin-id the application will"
+                      + " create a random plugin. ")
           Integer pluginId)
       throws IOException {
     String fromFile = Files.readString(fixtureDir.resolve(yamlFile).toAbsolutePath().normalize());
@@ -288,7 +293,9 @@ public class HasuraCommand {
               names = "--table-name",
               required = false,
               description = "The table_name to update.")
-          String tableName)
+          String tableName,
+      @CommandLine.Option(names = "--cron", required = false, description = "The cron to update.")
+          String cron)
       throws IOException {
     String fromFile =
         Files.readString(
@@ -304,6 +311,13 @@ public class HasuraCommand {
     }
     if (tableName != null) {
       hasuraUtil.alterValueAt(jbody, tableName, "variables", "object", "table_name");
+    }
+    if (cron != null) {
+      if ("null".equalsIgnoreCase(cron)) {
+        hasuraUtil.alterValueAt(jbody, null, "variables", "object", "cron");
+      } else {
+        hasuraUtil.alterValueAt(jbody, cron, "variables", "object", "cron");
+      }
     }
     String body = jsonMapper.writeValueAsString(jbody);
     HasuraResponse response = service.doGraphql(body);
@@ -325,8 +339,7 @@ public class HasuraCommand {
               names = "--limit",
               required = false,
               description = "the limit of return records.")
-          Integer limit
-          )
+          Integer limit)
       throws IOException {
     String fromFile =
         Files.readString(fixtureDir.resolve("error-list.yaml").toAbsolutePath().normalize());
@@ -346,5 +359,4 @@ public class HasuraCommand {
       response.dumpData();
     }
   }
-
 }
