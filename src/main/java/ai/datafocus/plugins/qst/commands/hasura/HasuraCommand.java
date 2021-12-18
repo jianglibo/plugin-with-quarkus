@@ -173,7 +173,7 @@ public class HasuraCommand {
               names = "--detail",
               required = false,
               defaultValue = "false",
-              description = "the limit of return records.")
+              description = "display the detail of the fetched plugins.")
           boolean detail)
       throws IOException {
     String fromFile =
@@ -214,7 +214,7 @@ public class HasuraCommand {
       @CommandLine.Option(
               names = "--plugin-id",
               required = true,
-              description = "the plugin id to list instances.")
+              description = "the plugin id to list it's instances.")
           int pluginId)
       throws IOException {
     String fromFile =
@@ -242,8 +242,8 @@ public class HasuraCommand {
   void createInstance(
       @CommandLine.Option(
               names = "--yaml-file",
-              required = true,
-              description = "The name of the author.")
+              defaultValue = "instance-insert-demo.yml",
+              description = "The yaml file that describe the instance to create. default:  ${DEFAULT-VALUE}.")
           String yamlFile,
       @CommandLine.Option(
               names = "--plugin-id",
