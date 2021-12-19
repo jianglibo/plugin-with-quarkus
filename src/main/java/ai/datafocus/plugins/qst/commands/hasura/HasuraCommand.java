@@ -275,17 +275,35 @@ public class HasuraCommand {
                   "The yaml file that describe the instance to create. default:  ${DEFAULT-VALUE}.")
           String yamlFile,
       @CommandLine.Option(
+              names = "--name",
+              required = false,
+              description = "The name of the instance.")
+          String name,
+      @CommandLine.Option(
+              names = "--table-name",
+              required = false,
+              description = "The table_name of the instance.")
+          String tableName,
+      @CommandLine.Option(
               names = "--plugin-id",
               required = true,
               description =
                   "The id of the plugin. If you didn't provide a plugin-id the application will"
                       + " create a random plugin. ")
-          Integer pluginId)
+          Integer pluginId,
+      @CommandLine.Option(
+              names = "--cron",
+              required = false,
+              description = "The cron expression of the instance.")
+          String cron)
       throws IOException {
     String fromFile = Files.readString(fixtureDir.resolve(yamlFile).toAbsolutePath().normalize());
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
     alterValueAtIfNotNull_variables_object(jbody, pluginId, "dcs_plugin_id");
+    alterValueAtIfNotNull_variables_object(jbody, name, "name");
+    alterValueAtIfNotNull_variables_object(jbody, tableName, "table_name");
+    alterValueAtIfNotNull_variables_object(jbody, cron, "cron");
     String body = jsonMapper.writeValueAsString(jbody);
     dumpHasuraResponse(service.doGraphql(body));
   }
@@ -317,9 +335,9 @@ public class HasuraCommand {
       @CommandLine.Option(
               names = "--yaml-file",
               required = false,
-              description = "The the plugin update file.")
+              description = "The the instance update file.")
           String yamlFile,
-      @CommandLine.Option(names = "--id", required = true, description = "The id of the plugin.")
+      @CommandLine.Option(names = "--id", required = true, description = "The id of the instance.")
           Integer id,
       @CommandLine.Option(names = "--name", required = false, description = "The name to update.")
           String name,
