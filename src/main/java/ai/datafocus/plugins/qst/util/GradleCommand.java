@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ai.datafocus.plugins.qst.dto.ShellExecuteResult;
+
 public class GradleCommand {
 
-  public int build(Path projectRoot, String... args) throws IOException, InterruptedException {
+  public ShellExecuteResult build(Path projectRoot, String... args) throws IOException, InterruptedException {
     List<String> lines = new ArrayList<>();
     lines.addAll(Arrays.asList(args));
     String gcmd = OsUtil.isWindows ? ".\\gradlew.bat" : "./gradlew";

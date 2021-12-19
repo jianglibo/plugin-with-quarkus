@@ -2,6 +2,7 @@ package ai.datafocus.plugins.qst.util;
 
 import ai.datafocus.plugins.qst.commands.app.AppConfigMapping.AppDescription;
 import ai.datafocus.plugins.qst.dto.MockRow;
+import ai.datafocus.plugins.qst.dto.ShellExecuteResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -58,7 +59,8 @@ public class AppUtil {
     System.out.println(String.format(tpl, o));
   }
 
-  public static int gitPull(AppDescription description) throws InterruptedException, IOException {
+  public static ShellExecuteResult gitPull(AppDescription description)
+      throws InterruptedException, IOException {
     return CommonCommand.builder()
         .exec("git")
         .workingDirectory(description.projectRoot().toAbsolutePath().normalize())
@@ -67,7 +69,7 @@ public class AppUtil {
         .play();
   }
 
-  public static int gradleBuild(AppDescription description)
+  public static ShellExecuteResult gradleBuild(AppDescription description)
       throws InterruptedException, IOException {
     Path cur = description.projectRoot().toAbsolutePath().normalize();
     String cmd = cur.resolve(description.buildCommand().get(0)).toAbsolutePath().toString();

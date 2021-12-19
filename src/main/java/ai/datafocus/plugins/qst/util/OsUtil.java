@@ -1,5 +1,6 @@
 package ai.datafocus.plugins.qst.util;
 
+import ai.datafocus.plugins.qst.dto.ShellExecuteResult;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,8 +54,9 @@ public class OsUtil {
             .escalatePrivilege(true)
             .commandLine("--remove-home")
             .commandLine(userName);
-    int i = builder.consumer(sb).workingDirectory(OsUtil.currentDir()).build().play();
-    if (i != 0) {
+    ShellExecuteResult r =
+        builder.consumer(sb).workingDirectory(OsUtil.currentDir()).build().play();
+    if (r.getExitCode() != 0) {
       return "failed: " + sb.build().collect(Collectors.joining());
     } else {
       return "";
@@ -65,8 +67,9 @@ public class OsUtil {
     Stream.Builder<String> sb = Stream.builder();
     CommonCommand.CommonCommandBuilder builder =
         CommonCommand.builder().exec("addgroup").escalatePrivilege(true).commandLine(groupName);
-    int i = builder.consumer(sb).workingDirectory(OsUtil.currentDir()).build().play();
-    if (i != 0) {
+    ShellExecuteResult r =
+        builder.consumer(sb).workingDirectory(OsUtil.currentDir()).build().play();
+    if (r.getExitCode() != 0) {
       return "failed: " + sb.build().collect(Collectors.joining());
     } else {
       return "";
@@ -87,8 +90,9 @@ public class OsUtil {
     }
 
     builder.commandLine("--create-home").commandLine(userName);
-    int i = builder.consumer(sb).workingDirectory(OsUtil.currentDir()).build().play();
-    if (i != 0) {
+    ShellExecuteResult r =
+        builder.consumer(sb).workingDirectory(OsUtil.currentDir()).build().play();
+    if (r.getExitCode() != 0) {
       return "failed: " + sb.build().collect(Collectors.joining());
     } else {
       return "";
@@ -111,7 +115,7 @@ public class OsUtil {
   public static String killPid(Path pidFile) throws InterruptedException, IOException {
     String pid = new String(Files.readAllBytes(pidFile)).trim();
     Stream.Builder<String> sb = Stream.builder();
-    int i =
+    ShellExecuteResult r =
         CommonCommand.builder()
             .exec("kill")
             .commandLine("-9")
@@ -119,7 +123,7 @@ public class OsUtil {
             .consumer(sb)
             .build()
             .play();
-    if (i != 0) {
+    if (r.getExitCode() != 0) {
       return "failed: " + sb.build().collect(Collectors.joining());
     } else {
       Files.deleteIfExists(pidFile);

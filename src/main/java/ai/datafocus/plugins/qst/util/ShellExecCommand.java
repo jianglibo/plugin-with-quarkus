@@ -1,5 +1,6 @@
 package ai.datafocus.plugins.qst.util;
 
+import ai.datafocus.plugins.qst.dto.ShellExecuteResult;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,7 +53,7 @@ public abstract class ShellExecCommand {
     commandLines.addAll(Arrays.asList(lines));
   }
 
-  public int play() throws InterruptedException, IOException {
+  public ShellExecuteResult play() throws InterruptedException, IOException {
     assert prepareCalled : "prepare should be called before play";
     // try {
     ProcessBuilder builder = new ProcessBuilder();
@@ -71,13 +72,16 @@ public abstract class ShellExecCommand {
     builder.directory(workingDirectory.toFile());
     process = builder.start();
     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    List<String> lines = new ArrayList<>();
     String line;
     while ((line = reader.readLine()) != null) {
+      lines.add(line);
       if (consumer != null) {
         consumer.accept(line.trim());
       }
       log.info("line: {}", line);
     }
-    return process.waitFor();
+    int exitCode = process.waitFor();
+    return ShellExecuteResult.builder().exitCode(exitCode).outputs(lines).build();
   }
 }

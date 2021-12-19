@@ -27,18 +27,18 @@ quarkus:
   #   upload:
   #     url: http://localhost:8080/
   index-dependency:
-  -  name:
-     group-id: com.fasterxml.jackson.core
-     artifact-id: jackson-core
-     classifier:
-  - name1:
-     group-id: org.jboss.logging
-     artifact-id: jboss-logging
-     classifier:
-  - name2:
-    group-id: org.apache.kudu
-    artifact-id: kudu-client
-    classifer:
+    name:
+      group-id: com.fasterxml.jackson.core
+      artifact-id: jackson-core
+      classifier:
+    name1:
+       group-id: org.jboss.logging
+       artifact-id: jboss-logging
+       classifier:
+    name2:
+      group-id: org.apache.kudu
+      artifact-id: kudu-client
+      classifer:
   package:
     type: uber-jar
   log:
