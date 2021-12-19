@@ -22,7 +22,11 @@ DCS_TO_PLUGIN: >
 # https://blog.rpuch.com/2020/09/23/compiling-netty-enabled-application-with-dns-support-to-native-image-in-2020.html
 quarkus:
   http:
-    port: 8081
+    host-enabled: false
+    # insecure-requests: DISABLED
+    # redirect-insecure-requests: abc
+  # http:
+  #   port: 8081
   # rest-client:
   #   upload:
   #     url: http://localhost:8080/
@@ -53,8 +57,8 @@ quarkus:
       - --initialize-at-build-time=io.netty.resolver.dns.DnsServerAddressStreamProviders$DefaultProviderHolder,io.netty.resolver.dns.DnsNameResolver,io.netty.resolver.HostsFileEntriesResolver
     # extensions-api:
     #   hostname-verifier: io.quarkus.restclient.NoopHostnameVerifier
-  tls:
-    trust-all: true
+  # tls:
+    # trust-all: true
 kudu:
   master: 161.189.46.49:7051
   

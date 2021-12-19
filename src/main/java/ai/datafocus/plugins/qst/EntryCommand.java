@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import ai.datafocus.plugins.qst.commands.DisplayConfigCommand;
+import ai.datafocus.plugins.qst.commands.LongRunCommand;
 import ai.datafocus.plugins.qst.commands.RedisDataCommand;
 import ai.datafocus.plugins.qst.commands.StdioDataCommand;
 import ai.datafocus.plugins.qst.commands.app.AppCommand;
@@ -19,8 +20,6 @@ import io.quarkus.logging.Log;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
 import lombok.Getter;
 import picocli.CommandLine;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.ScopeType;
 
 @TopCommand
 @CommandLine.Command(
@@ -33,7 +32,8 @@ import picocli.CommandLine.ScopeType;
       DisplayConfigCommand.class,
       HasuraCommand.class,
       AppCommand.class,
-      PluginServerCommand.class
+      PluginServerCommand.class,
+      LongRunCommand.class
     })
 public class EntryCommand {
 
