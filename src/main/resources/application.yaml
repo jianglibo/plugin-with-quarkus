@@ -65,3 +65,4 @@ apps:
       git-url: https://github.com/openscanner/fdatacollect
       build-command: gradlew.bat,build,-x,test
       ssh-connect-str: root@192.168.0.22
+      jars-in-dir: dcs-plugin-server/build/libs

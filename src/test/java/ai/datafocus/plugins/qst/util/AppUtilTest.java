@@ -23,4 +23,15 @@ public class AppUtilTest {
 
     assertThat(file).endsWith(Path.of("plugin-with-quarkus-0.1.3-SNAPSHOT-runner.jar"));
   }
+
+  @Test
+  void tFindNewestVersionJar1() throws IOException {
+    Files.writeString(
+        anotherTempDir.resolve("dcs-plugin-server-0.0.1.jar"), "hello");
+    Files.writeString(
+        anotherTempDir.resolve("dcs-plugin-server-0.0.1-plain.jar"), "hello");
+    Path file = AppUtil.findNewestVersionJar(anotherTempDir);
+
+    assertThat(file).endsWith(Path.of("dcs-plugin-server-0.0.1.jar"));
+  }
 }

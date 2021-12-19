@@ -24,6 +24,8 @@ public interface AppConfigMapping {
 
     String gitUrl();
 
+    String jarsInDir();
+
     @WithConverter(CommaSeparatorConverter.class)
     List<String> buildCommand();
   }

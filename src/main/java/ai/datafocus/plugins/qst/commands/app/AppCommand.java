@@ -29,7 +29,8 @@ public class AppCommand {
     AppDescription application = appConfigMapping.findApp(name);
     stopIfNotZero(AppUtil.gitPull(application));
     stopIfNotZero(AppUtil.gradleBuild(application));
-    Path jar = AppUtil.findNewestVersionJar(application.projectRoot().resolve("build"));
+    Path jar =
+        AppUtil.findNewestVersionJar(application.projectRoot().resolve(application.jarsInDir()));
     stopIfNotZero(
         sshCommand.scpTo(
             application.sshConnectStr(),
