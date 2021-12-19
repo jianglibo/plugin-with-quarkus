@@ -1,10 +1,13 @@
 package ai.datafocus.plugins.qst.commands.app;
 
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithConverter;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-
-import io.smallrye.config.ConfigMapping;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.eclipse.microprofile.config.spi.Converter;
 
 @ConfigMapping(prefix = "apps")
 public interface AppConfigMapping {
@@ -21,6 +24,24 @@ public interface AppConfigMapping {
 
     String gitUrl();
 
+    @WithConverter(CommaSeparatorConverter.class)
     List<String> buildCommand();
+  }
+
+  public static class CommaSeparatorConverter implements Converter<List<String>> {
+    @Override
+    public List<String> convert(final String value) {
+      String stripped = value.trim();
+      String[] parts;
+      if (stripped.contains(",,,")) {
+        parts = stripped.split(",,,");
+      } else if (stripped.contains(",,")) {
+        parts = stripped.split(",,,");
+      } else {
+        parts = stripped.split(",");
+      }
+
+      return Stream.of(parts).map(String::trim).collect(Collectors.toList());
+    }
   }
 }
