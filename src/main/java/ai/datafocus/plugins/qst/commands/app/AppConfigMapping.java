@@ -1,21 +1,21 @@
 package ai.datafocus.plugins.qst.commands.app;
 
-import io.smallrye.config.ConfigMapping;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
+
+import io.smallrye.config.ConfigMapping;
 
 @ConfigMapping(prefix = "apps")
 public interface AppConfigMapping {
-  List<AppDescription> all();
+  Map<String, AppDescription> deploys();
 
   default AppDescription findApp(AppName appName) {
-    return all().stream().filter(a -> a.appName() == appName).findAny().get();
+    return deploys().get(appName.name());
   }
 
   interface AppDescription {
     String sshConnectStr();
-
-    AppName appName();
 
     Path projectRoot();
 
