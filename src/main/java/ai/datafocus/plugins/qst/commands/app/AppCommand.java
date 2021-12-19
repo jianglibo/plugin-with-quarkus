@@ -46,6 +46,9 @@ public class AppCommand {
     stopIfNotZero(
         sshCommand.exec(
             application.sshConnectStr(),
+            "-t",
+            "bash",
+            "-ci",
             "kb",
             "delete",
             "-f",
@@ -53,6 +56,9 @@ public class AppCommand {
     stopIfNotZero(
         sshCommand.exec(
             application.sshConnectStr(),
+            "-t",
+            "bash",
+            "-ci",
             "kb",
             "create",
             "-f",
