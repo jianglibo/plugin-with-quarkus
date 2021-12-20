@@ -50,13 +50,12 @@ public class AppCommand {
             "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/",
             "-R"),
         printOutput);
+    // kubectl --namespace=dcs-plugin delete -f /data01/datafocus/node/df80/yaml/dcs/deploy/
     stopIfNotZero(
         sshCommand.exec(
             application.sshConnectStr(),
-            "-t",
-            "bash",
-            "-ci",
-            "kb",
+            "kubectl",
+            "--namespace=dcs-plugin",
             "delete",
             "-f",
             "/data01/datafocus/node/df80/yaml/dcs/deploy/"),
@@ -64,10 +63,8 @@ public class AppCommand {
     stopIfNotZero(
         sshCommand.exec(
             application.sshConnectStr(),
-            "-t",
-            "bash",
-            "-ci",
-            "kb",
+            "kubectl",
+            "--namespace=dcs-plugin",
             "create",
             "-f",
             "/data01/datafocus/node/df80/yaml/dcs/deploy/"),
