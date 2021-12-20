@@ -303,7 +303,13 @@ public class HasuraCommand {
     alterValueAtIfNotNull_variables_object(jbody, pluginId, "dcs_plugin_id");
     alterValueAtIfNotNull_variables_object(jbody, name, "name");
     alterValueAtIfNotNull_variables_object(jbody, tableName, "table_name");
-    alterValueAtIfNotNull_variables_object(jbody, cron, "cron");
+    if (cron != null) {
+      if ("null".equalsIgnoreCase(cron)) {
+        hasuraUtil.alterValueAt(jbody, null, "variables", "object", "cron");
+      } else {
+        alterValueAtIfNotNull_variables_object(jbody, cron, "cron");
+      }
+    }
     String body = jsonMapper.writeValueAsString(jbody);
     dumpHasuraResponse(service.doGraphql(body));
   }
