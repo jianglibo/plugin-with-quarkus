@@ -19,6 +19,6 @@ public interface MultipartService {
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.TEXT_PLAIN)
   String sendMultipartData(
-      @HeaderParam(CommonNames.UPLOAD_SECRET_HEADER_NAME) String dcsPluginSecret,
+      @HeaderParam(CommonNames.HASURA_DCS_SECRET) String dcsPluginSecret,
       @MultipartForm MultipartFormDataOutput data);
 }
