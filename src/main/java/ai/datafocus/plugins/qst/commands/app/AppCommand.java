@@ -27,7 +27,7 @@ public class AppCommand {
           AppName name,
       @CommandLine.Option(
               names = "--print-output",
-              required = true,
+              required = false,
               description = "print output of the ssh command.")
           boolean printOutput)
       throws InterruptedException, IOException {
