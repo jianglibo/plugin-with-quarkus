@@ -30,30 +30,34 @@ public class AppCommand {
               defaultValue = "datafocus",
               description = "the namespace deploys to.  ${DEFAULT-VALUE} ")
           String namespace,
+      @CommandLine.Option(names = "--restart-only", description = "restart the pod only.")
+          boolean restartOnly,
       @CommandLine.Option(
               names = "--print-output",
               description = "print output of the ssh command.")
           boolean printOutput)
       throws InterruptedException, IOException {
     AppDescription application = appConfigMapping.findApp(name);
-    stopIfNotZero(AppUtil.gitPull(application), printOutput);
-    stopIfNotZero(AppUtil.gradleBuild(application), printOutput);
-    Path jar =
-        AppUtil.findNewestVersionJar(application.projectRoot().resolve(application.jarsInDir()));
-    stopIfNotZero(
-        sshCommand.scpTo(
-            application.sshConnectStr(),
-            jar,
-            "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/dcs-plugin-server.jar"),
-        printOutput);
-    stopIfNotZero(
-        sshCommand.exec(
-            application.sshConnectStr(),
-            "chown",
-            "datafocus:datafocus",
-            "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/",
-            "-R"),
-        printOutput);
+    if (!restartOnly) {
+      stopIfNotZero(AppUtil.gitPull(application), printOutput);
+      stopIfNotZero(AppUtil.gradleBuild(application), printOutput);
+      Path jar =
+          AppUtil.findNewestVersionJar(application.projectRoot().resolve(application.jarsInDir()));
+      stopIfNotZero(
+          sshCommand.scpTo(
+              application.sshConnectStr(),
+              jar,
+              "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/dcs-plugin-server.jar"),
+          printOutput);
+      stopIfNotZero(
+          sshCommand.exec(
+              application.sshConnectStr(),
+              "chown",
+              "datafocus:datafocus",
+              "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/",
+              "-R"),
+          printOutput);
+    }
     // kubectl --namespace=dcs-plugin delete -f /data01/datafocus/node/df80/yaml/dcs/deploy/
     stopIfNotZero(
         sshCommand.exec(
@@ -73,8 +77,7 @@ public class AppCommand {
             "-f",
             "/data01/datafocus/node/df80/yaml/dcs/deploy/"),
         printOutput);
-
-    return null;
+    return "success";
   }
 
   private void stopIfNotZero(ShellExecuteResult result, boolean printOutput) {
