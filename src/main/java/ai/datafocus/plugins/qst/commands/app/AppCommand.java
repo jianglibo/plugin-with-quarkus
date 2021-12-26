@@ -26,8 +26,12 @@ public class AppCommand {
               description = "the name of the application to deploy")
           AppName name,
       @CommandLine.Option(
+              names = "--namespace",
+              defaultValue = "datafocus",
+              description = "the namespace deploys to.  ${DEFAULT-VALUE} ")
+          String namespace,
+      @CommandLine.Option(
               names = "--print-output",
-              required = false,
               description = "print output of the ssh command.")
           boolean printOutput)
       throws InterruptedException, IOException {
@@ -55,7 +59,7 @@ public class AppCommand {
         sshCommand.exec(
             application.sshConnectStr(),
             "kubectl",
-            "--namespace=dcs-plugin",
+            "--namespace=" + namespace,
             "delete",
             "-f",
             "/data01/datafocus/node/df80/yaml/dcs/deploy/"),
@@ -64,7 +68,7 @@ public class AppCommand {
         sshCommand.exec(
             application.sshConnectStr(),
             "kubectl",
-            "--namespace=dcs-plugin",
+            "--namespace=" + namespace,
             "create",
             "-f",
             "/data01/datafocus/node/df80/yaml/dcs/deploy/"),
