@@ -75,4 +75,4 @@ apps:
         method: GET
         expected-http-status: 200
         body: ""
-        headers: {}
+        # headers: {}

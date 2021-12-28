@@ -11,6 +11,7 @@ import org.eclipse.microprofile.config.spi.Converter;
 
 import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.WithConverter;
+import io.smallrye.config.WithDefault;
 
 @ConfigMapping(prefix = "apps")
 public interface AppConfigMapping {
@@ -44,6 +45,7 @@ public interface AppConfigMapping {
 
     Optional<String> body();
 
+    @WithDefault("")
     Map<String, String> headers();
   }
 
