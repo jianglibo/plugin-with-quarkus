@@ -41,7 +41,7 @@ public interface AppConfigMapping {
 
     String method();
 
-    String expectedHttpStatus();
+    int expectedHttpStatus();
 
     Optional<String> body();
 

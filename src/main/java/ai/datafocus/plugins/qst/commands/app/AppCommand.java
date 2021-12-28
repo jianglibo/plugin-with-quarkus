@@ -5,6 +5,7 @@ import ai.datafocus.plugins.qst.commands.app.AppConfigMapping.ProbeEndpoint;
 import ai.datafocus.plugins.qst.dto.ShellExecuteResult;
 import ai.datafocus.plugins.qst.util.AppUtil;
 import ai.datafocus.plugins.qst.util.PureHttp;
+import ai.datafocus.plugins.qst.util.PureHttp.RequestResult;
 import ai.datafocus.plugins.qst.util.SshCommand;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -95,10 +96,11 @@ public class AppCommand {
     if (application.probeEndpoint().isPresent()) {
       ProbeEndpoint pe = application.probeEndpoint().get();
       try {
-        PureHttp.request(pe.url(), pe.method(), pe.body(), pe.headers());
-        System.out.println("system is running");
+        RequestResult result = PureHttp.request(pe.url(), pe.method(), pe.body(), pe.headers());
+        result.printMessage(pe.expectedHttpStatus());
       } catch (Exception e) {
         System.out.println(String.format("check running failed: %s", e.getMessage()));
+        e.printStackTrace();
       }
     } else {
       System.out.println("application didn't config check-running.");
