@@ -1,13 +1,16 @@
 package ai.datafocus.plugins.qst.commands.app;
 
-import io.smallrye.config.ConfigMapping;
-import io.smallrye.config.WithConverter;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.eclipse.microprofile.config.spi.Converter;
+
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithConverter;
 
 @ConfigMapping(prefix = "apps")
 public interface AppConfigMapping {
@@ -26,8 +29,22 @@ public interface AppConfigMapping {
 
     String jarsInDir();
 
+    Optional<ProbeEndpoint> probeEndpoint();
+
     @WithConverter(CommaSeparatorConverter.class)
     List<String> buildCommand();
+  }
+
+  interface ProbeEndpoint {
+    String url();
+
+    String method();
+
+    String expectedHttpStatus();
+
+    Optional<String> body();
+
+    Map<String, String> headers();
   }
 
   public static class CommaSeparatorConverter implements Converter<List<String>> {

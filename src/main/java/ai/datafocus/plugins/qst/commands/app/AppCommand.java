@@ -1,8 +1,10 @@
 package ai.datafocus.plugins.qst.commands.app;
 
 import ai.datafocus.plugins.qst.commands.app.AppConfigMapping.AppDescription;
+import ai.datafocus.plugins.qst.commands.app.AppConfigMapping.ProbeEndpoint;
 import ai.datafocus.plugins.qst.dto.ShellExecuteResult;
 import ai.datafocus.plugins.qst.util.AppUtil;
+import ai.datafocus.plugins.qst.util.PureHttp;
 import ai.datafocus.plugins.qst.util.SshCommand;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -32,9 +34,7 @@ public class AppCommand {
           String namespace,
       @CommandLine.Option(names = "--restart-only", description = "restart the pod only.")
           boolean restartOnly,
-      @CommandLine.Option(
-              names = "--silent",
-              description = "don't print output of the command.")
+      @CommandLine.Option(names = "--silent", description = "don't print output of the command.")
           boolean silent)
       throws InterruptedException, IOException {
     AppDescription application = appConfigMapping.findApp(name);
@@ -47,7 +47,8 @@ public class AppCommand {
           sshCommand.scpTo(
               application.sshConnectStr(),
               jar,
-              "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/dcs-plugin-server.jar", silent),
+              "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/dcs-plugin-server.jar",
+              silent),
           silent);
       stopIfNotZero(
           sshCommand.exec(
@@ -77,6 +78,31 @@ public class AppCommand {
             "-f",
             "/data01/datafocus/node/df80/yaml/dcs/deploy/"),
         silent);
+    return "success";
+  }
+
+  @Command(name = "check-running")
+  String checkRunning(
+      @CommandLine.Option(
+              names = "--name",
+              required = true,
+              description = "the name of the application to deploy")
+          AppName name,
+      @CommandLine.Option(names = "--silent", description = "don't print output of the command.")
+          boolean silent)
+      throws InterruptedException, IOException {
+    AppDescription application = appConfigMapping.findApp(name);
+    if (application.probeEndpoint().isPresent()) {
+      ProbeEndpoint pe = application.probeEndpoint().get();
+      try {
+        PureHttp.request(pe.url(), pe.method(), pe.body(), pe.headers());
+        System.out.println("system is running");
+      } catch (Exception e) {
+        System.out.println(String.format("check running failed: %s", e.getMessage()));
+      }
+    } else {
+      System.out.println("application didn't config check-running.");
+    }
     return "success";
   }
 

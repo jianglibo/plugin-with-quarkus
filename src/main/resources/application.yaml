@@ -70,3 +70,9 @@ apps:
       build-command: gradlew.bat,:dcs-plugin-server:build,-x,test
       ssh-connect-str: root@192.168.0.22
       jars-in-dir: dcs-plugin-server/build/libs
+      probe-endpoint: 
+        url: http://hasura
+        method: GET
+        expected-http-status: 200
+        body: ""
+        headers: {}
