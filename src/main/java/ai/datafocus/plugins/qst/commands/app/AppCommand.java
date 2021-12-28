@@ -33,22 +33,22 @@ public class AppCommand {
       @CommandLine.Option(names = "--restart-only", description = "restart the pod only.")
           boolean restartOnly,
       @CommandLine.Option(
-              names = "--print-output",
-              description = "print output of the ssh command.")
-          boolean printOutput)
+              names = "--silent",
+              description = "don't print output of the command.")
+          boolean silent)
       throws InterruptedException, IOException {
     AppDescription application = appConfigMapping.findApp(name);
     if (!restartOnly) {
-      stopIfNotZero(AppUtil.gitPull(application), printOutput);
-      stopIfNotZero(AppUtil.gradleBuild(application), printOutput);
+      stopIfNotZero(AppUtil.gitPull(application), silent);
+      stopIfNotZero(AppUtil.gradleBuild(application), silent);
       Path jar =
           AppUtil.findNewestVersionJar(application.projectRoot().resolve(application.jarsInDir()));
       stopIfNotZero(
           sshCommand.scpTo(
               application.sshConnectStr(),
               jar,
-              "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/dcs-plugin-server.jar"),
-          printOutput);
+              "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/dcs-plugin-server.jar", silent),
+          silent);
       stopIfNotZero(
           sshCommand.exec(
               application.sshConnectStr(),
@@ -56,7 +56,7 @@ public class AppCommand {
               "datafocus:datafocus",
               "/data01/datafocus/node/df80/pv/datafocus/src/bin/dcs/",
               "-R"),
-          printOutput);
+          silent);
     }
     // kubectl --namespace=dcs-plugin delete -f /data01/datafocus/node/df80/yaml/dcs/deploy/
     stopIfNotZero(
@@ -67,7 +67,7 @@ public class AppCommand {
             "delete",
             "-f",
             "/data01/datafocus/node/df80/yaml/dcs/deploy/"),
-        printOutput);
+        silent);
     stopIfNotZero(
         sshCommand.exec(
             application.sshConnectStr(),
@@ -76,12 +76,12 @@ public class AppCommand {
             "create",
             "-f",
             "/data01/datafocus/node/df80/yaml/dcs/deploy/"),
-        printOutput);
+        silent);
     return "success";
   }
 
-  private void stopIfNotZero(ShellExecuteResult result, boolean printOutput) {
-    if (printOutput) {
+  private void stopIfNotZero(ShellExecuteResult result, boolean silent) {
+    if (!silent) {
       if (result.getOutputs() != null) {
         for (String line : result.getOutputs()) {
           System.out.println(line);

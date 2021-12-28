@@ -21,12 +21,25 @@ public class SshCommand {
 
   public ShellExecuteResult scpTo(String hostString, Path local, String remote)
       throws InterruptedException, IOException {
-    return CommonCommand.builder()
-        .exec("scp")
-        .commandLine(local.toAbsolutePath().normalize().toString())
-        .commandLine(hostString + ":" + remote)
-        .debug(debug)
-        .build()
-        .play();
+    return scpTo(hostString, local, remote, false);
+  }
+
+  public ShellExecuteResult scpTo(String hostString, Path local, String remote, boolean silent)
+      throws InterruptedException, IOException {
+    if (!silent) {
+      System.out.println(String.format("start copying %s to %s:%s", local, hostString, remote));
+    }
+    ShellExecuteResult r =
+        CommonCommand.builder()
+            .exec("scp")
+            .commandLine(local.toAbsolutePath().normalize().toString())
+            .commandLine(hostString + ":" + remote)
+            .debug(debug)
+            .build()
+            .play();
+    if (!silent) {
+      System.out.println(String.format("end copying %s to %s:%s", local, hostString, remote));
+    }
+    return r;
   }
 }
