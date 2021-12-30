@@ -60,17 +60,21 @@ public class PureHttp {
     private int statusCode;
     private String responseBody;
 
-    public void printMessage(int expectedHttpStatus) {
+    public void printMessage(int expectedHttpStatus, boolean printBody) {
       if (statusCode != expectedHttpStatus) {
         System.out.println(
             String.format(
                 "expected HTTP status code: %s, the return code: %s",
                 expectedHttpStatus, statusCode));
+        System.out.println("the response body is as bellow:\n");
+        System.out.println(responseBody);
       } else {
         System.out.println("return expected code: " + statusCode);
+        if (printBody) {
+          System.out.println("the response body is as bellow:\n");
+          System.out.println(responseBody);
+        }
       }
-      System.out.println("the response body is as bellow:\n");
-      System.out.println(responseBody);
     }
   }
 

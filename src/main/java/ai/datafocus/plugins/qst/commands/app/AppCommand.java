@@ -89,15 +89,17 @@ public class AppCommand {
               required = true,
               description = "the name of the application to deploy")
           AppName name,
-      @CommandLine.Option(names = "--silent", description = "don't print output of the command.")
-          boolean silent)
+      @CommandLine.Option(
+              names = "--print-body",
+              description = "print check result even if the result is as expected")
+          boolean printBody)
       throws InterruptedException, IOException {
     AppDescription application = appConfigMapping.findApp(name);
     if (application.probeEndpoint().isPresent()) {
       ProbeEndpoint pe = application.probeEndpoint().get();
       try {
         RequestResult result = PureHttp.request(pe.url(), pe.method(), pe.body(), pe.headers());
-        result.printMessage(pe.expectedHttpStatus());
+        result.printMessage(pe.expectedHttpStatus(), printBody);
       } catch (Exception e) {
         System.out.println(String.format("check running failed: %s", e.getMessage()));
         e.printStackTrace();
