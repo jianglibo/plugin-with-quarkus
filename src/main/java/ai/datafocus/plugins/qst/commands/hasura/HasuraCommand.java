@@ -275,11 +275,6 @@ public class HasuraCommand {
                   "The yaml file that describe the instance to create. default:  ${DEFAULT-VALUE}.")
           String yamlFile,
       @CommandLine.Option(
-              names = "--name",
-              required = false,
-              description = "The name of the instance.")
-          String name,
-      @CommandLine.Option(
               names = "--table-name",
               required = false,
               description = "The table_name of the instance.")
@@ -301,7 +296,6 @@ public class HasuraCommand {
     Map<String, Object> jbody =
         yamlMapper.getMapper().readValue(fromFile, CommonTypeReferences.string2object);
     alterValueAtIfNotNull_variables_object(jbody, pluginId, "dcs_plugin_id");
-    alterValueAtIfNotNull_variables_object(jbody, name, "name");
     alterValueAtIfNotNull_variables_object(jbody, tableName, "table_name");
     if (cron != null) {
       if ("null".equalsIgnoreCase(cron)) {
