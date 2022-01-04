@@ -10,6 +10,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import ai.datafocus.plugins.qst.commands.DisplayConfigCommand;
 import ai.datafocus.plugins.qst.commands.LongRunCommand;
+import ai.datafocus.plugins.qst.commands.RabbitCommand;
 import ai.datafocus.plugins.qst.commands.RedisDataCommand;
 import ai.datafocus.plugins.qst.commands.StdioDataCommand;
 import ai.datafocus.plugins.qst.commands.app.AppCommand;
@@ -33,7 +34,8 @@ import picocli.CommandLine;
       HasuraCommand.class,
       AppCommand.class,
       PluginServerCommand.class,
-      LongRunCommand.class
+      LongRunCommand.class,
+      RabbitCommand.class
     })
 public class EntryCommand {
 

@@ -61,6 +61,14 @@ quarkus:
     # trust-all: true
 kudu:
   master: 161.189.46.49:7051
+
+app:
+  rabbit:
+    host: rabbitmq
+    port: 5672
+    queue-name: ndjson-kudu.kudu-group
+    exchange: ndjson-kudu
+    routing-key: "#"
   
 apps:
   deploys:

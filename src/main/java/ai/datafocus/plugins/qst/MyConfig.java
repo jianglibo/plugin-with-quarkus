@@ -3,8 +3,8 @@ package ai.datafocus.plugins.qst;
 import java.util.HashMap;
 import java.util.Optional;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -15,7 +15,7 @@ import ai.datafocus.plugins.qst.dto.DcsPluginInstance;
 import ai.datafocus.plugins.qst.dto.MockState;
 import lombok.Getter;
 
-@Singleton
+@ApplicationScoped
 public class MyConfig {
 
   /** from environment variable. Plugin server will prepare for you. */
