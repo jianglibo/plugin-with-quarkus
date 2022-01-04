@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import lombok.Builder;
+import lombok.Data;
 
 @ApplicationScoped
 public class MessangeSender {
@@ -34,12 +36,25 @@ public class MessangeSender {
     }
   }
 
-  public void sendMessage(String exchange, String routingKey, int count, int nameLength)
+  public void sendMessage(
+      int instanceId, String exchange, String routingKey, int count, int nameLength)
       throws IOException, TimeoutException {
     Channel channel = getChannel();
     for (int i = 0; i < count; i++) {
       MockRow row = AppUtil.genRandomRow(i, nameLength);
-      channel.basicPublish(exchange, routingKey, null, jsonMapper.writeValueAsBytes(row));
+      channel.basicPublish(
+          exchange,
+          routingKey,
+          null,
+          jsonMapper.writeValueAsBytes(
+              MessageWithInstanceId.builder().id(instanceId).row(row).build()));
     }
+  }
+
+  @Data
+  @Builder
+  public static class MessageWithInstanceId {
+    private int id;
+    private MockRow row;
   }
 }

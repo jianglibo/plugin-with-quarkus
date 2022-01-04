@@ -17,6 +17,11 @@ public class RabbitCommand {
   @Command(name = "send-to-queue")
   String sendToQueue(
       @CommandLine.Option(
+              names = "--instance-id",
+              description = "the plugin instance id.",
+              required = true)
+          int instanceId,
+      @CommandLine.Option(
               names = "--exchange",
               description = "the exchange name to send to.",
               required = false)
@@ -39,6 +44,7 @@ public class RabbitCommand {
       throws IOException, TimeoutException {
 
     messageSender.sendMessage(
+        instanceId,
         exchange == null ? appProperties.rabbit().exchange() : exchange,
         routingKey == null ? appProperties.rabbit().routingKey() : routingKey,
         count,
