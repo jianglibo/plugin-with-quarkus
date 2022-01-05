@@ -77,4 +77,21 @@ public class KuduTableCommand {
 
     }
   }
+
+  @Command(name = "list-table")
+  void listTable(
+      @CommandLine.Option(
+              names = "--name-filter",
+              required = false,
+              description = "the filter of the table name.")
+          String filterName) {
+    try {
+      System.out.printf(
+          "all tables: %s", KuduClientUtil.listTable(kuduClient(), filterName));
+    } catch (KuduException e) {
+      e.printStackTrace();
+    } finally {
+
+    }
+  }
 }

@@ -3,7 +3,6 @@ package ai.datafocus.plugins.qst.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
@@ -12,6 +11,7 @@ import org.apache.kudu.client.KuduClient;
 import org.apache.kudu.client.KuduException;
 import org.apache.kudu.client.KuduScanner;
 import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.ListTablesResponse;
 import org.apache.kudu.client.RowResultIterator;
 
 public class KuduClientUtil {
@@ -57,6 +57,11 @@ public class KuduClientUtil {
     createTable(client, tableName, 1, 1);
   }
 
+  public static List<String> listTable(KuduClient client, String nameFilter) throws KuduException {
+    ListTablesResponse tables = client.getTablesList(nameFilter);
+    return tables.getTablesList();
+  }
+
   private static void createTable(KuduClient client, String tableName, int replicas, int tablets)
       throws KuduException {
     try {
@@ -94,5 +99,5 @@ public class KuduClientUtil {
       }
     }
     return count;
-  }	
+  }
 }
