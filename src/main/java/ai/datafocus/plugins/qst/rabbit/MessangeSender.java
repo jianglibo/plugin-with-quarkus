@@ -37,11 +37,11 @@ public class MessangeSender {
   }
 
   public void sendMessage(
-      int instanceId, String exchange, String routingKey, int count, int nameLength)
+      int instanceId, String exchange, String routingKey, int count, int startId, int nameLength)
       throws IOException, TimeoutException {
     Channel channel = getChannel();
     for (int i = 0; i < count; i++) {
-      MockRow row = AppUtil.genRandomRow(i, nameLength);
+      MockRow row = AppUtil.genRandomRow(i + startId, nameLength);
       channel.basicPublish(
           exchange,
           routingKey,

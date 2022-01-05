@@ -32,6 +32,11 @@ public class RabbitCommand {
               description = "the routing key.")
           String routingKey,
       @CommandLine.Option(
+              names = "--start-id",
+              defaultValue = "0",
+              description = "the start id of the generated messages. default: ${DEFAULT-VALUE}")
+          int startId,
+      @CommandLine.Option(
               names = "--count",
               defaultValue = "100",
               description = "the count of the messages to send. default: ${DEFAULT-VALUE}")
@@ -48,8 +53,9 @@ public class RabbitCommand {
         exchange == null ? appProperties.rabbit().exchange() : exchange,
         routingKey == null ? appProperties.rabbit().routingKey() : routingKey,
         count,
+        startId,
         nameLength);
-    System.out.printf("send %s messages.", count);
+    System.out.printf("sending %s messages done.", count);
     System.out.println();
     return "success.";
   }
